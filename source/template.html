@@ -1,0 +1,54 @@
+<div class="label default-question-text-size" id="label">{{{LABEL}}}</div>
+
+{{#MEDIAIMAGE}}
+<img src="{{MEDIAIMAGE}}" />
+{{/MEDIAIMAGE}}
+
+{{#MEDIAAUDIO}}
+<audio controls>
+  <source src="{{MEDIAAUDIO}}">
+  Your browser does not support the audio element.
+</audio>
+{{/MEDIAAUDIO}}
+
+{{#MEDIAVIDEO}}
+<video width="100%" height="*" controls>
+  <source src="{{MEDIAVIDEO}}">
+  Your browser does not support the video tag.
+</video>
+{{/MEDIAVIDEO}}
+
+<div class="hint default-hint-text-size" id="hint">{{{HINT}}}</div>
+<div class="timer default-question-text-size" id="timer"></div>
+
+<table class="choice-table">
+  <tr class="top-row">
+    {{#CHOICES}}
+    <td class="choice-disp">
+      <table>
+        {{#CHOICE_IMAGE}}
+        <tr>
+          <td>
+            {{CHOICE_IMAGE}}
+          </td>
+        </tr>
+        {{/CHOICE_IMAGE}}
+        <tr>
+          <td class="choice-label">
+            {{CHOICE_LABEL}}
+          </td>
+        </tr>
+        <tr>
+          <td class="choice-label" id=choice-{{CHOICE_VALUE}}>
+          </td>
+        </tr>
+      </table>
+    </td>
+    {{/CHOICES}}
+  </tr>
+  <tr class="bottom-row">
+    {{#CHOICES}}
+    <td>&nbsp;</td>
+    {{/CHOICES}}
+  </tr>
+</table>

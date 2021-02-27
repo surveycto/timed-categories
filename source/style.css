@@ -1,0 +1,20 @@
+.label, .hint, .timer {
+  text-align: center;
+}
+
+table.choice-table{
+  border-collapse: collapse;
+  border-style: hidden;
+  height: 100%;
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.choice-table td {
+  text-align: center;
+  border: solid black 1px;
+}
+
+tr.top-row {
+  height: 20%;
+}

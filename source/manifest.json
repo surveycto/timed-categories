@@ -1,0 +1,6 @@
+{
+	"name" : "Timed categories",
+	"author" : "Dobility",
+	"version": "1.0.0",
+	"supportedFieldTypes": ["select_one"]
+}
