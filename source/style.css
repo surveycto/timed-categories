@@ -18,3 +18,7 @@ table.choice-table td {
 tr.top-row {
   height: 20%;
 }
+
+tr.bottom-row {
+  height: 200px;
+}

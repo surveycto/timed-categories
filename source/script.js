@@ -53,7 +53,7 @@ if ((allowContinue === 1) && (metadata != null)) {
   }
 }
 
-for (var tdNum = 0; tdNum < clickAreas - 1; tdNum++) {
+for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
   var clickArea = clickAreas[tdNum]
   clickArea.addEventListener('click', clicked)
 }
@@ -78,6 +78,7 @@ function timer () {
 }
 
 function clicked (e) {
+  console.log('Click!')
   var target = e.srcElement
   var targetId = target.id.substring(7)
   choiceSelected(targetId)
