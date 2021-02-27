@@ -22,9 +22,9 @@
 <div class="timer default-question-text-size" id="timer"></div>
 
 <table class="choice-table">
-  <tr class="top-row">
+  <tr class="main-row top-row">
     {{#CHOICES}}
-    <td class="choice-disp">
+    <td class="choice-disp main-cell">
       <table>
         {{#CHOICE_IMAGE}}
         <tr>
@@ -39,16 +39,16 @@
           </td>
         </tr>
         <tr>
-          <td class="choice-label" id=choice-{{CHOICE_VALUE}}>
+          <td class="choice-label" id="key">
           </td>
         </tr>
       </table>
     </td>
     {{/CHOICES}}
   </tr>
-  <tr class="bottom-row">
+  <tr class="main-row bottom-row">
     {{#CHOICES}}
-    <td>&nbsp;</td>
+    <td id=choice-{{CHOICE_VALUE}} class="main-cell">&nbsp;</td>
     {{/CHOICES}}
   </tr>
 </table>

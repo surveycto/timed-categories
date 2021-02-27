@@ -12,19 +12,16 @@ var metadata = getMetaData()
 var allowContinue = getPluginParameter('continue')
 
 var timerH = document.querySelector('#timer')
-var choiceTds = document.querySelectorAll('.choice')
 var keyContainers = document.querySelectorAll('#key')
-var missedChoice = choiceTds[numChoices - 1] // Choice with a value of 0, which will be used for when the choice is missed
-
 var choiceTable = document.querySelector('.choice-table')
-var choiceRows = choiceTable.querySelectorAll('tr')
+var choiceRows = choiceTable.querySelectorAll('.main-row')
 var clickAreas = choiceRows[1].querySelectorAll('td') // The bottom row is the clickable areas
 
-// Hide the last column, which is the one for missing it.
+var tableMatrix = []
 for (var rowNum = 0; rowNum < 2; rowNum++) {
-  var rowTds = choiceRows[rowNum].querySelectorAll('td')
-  var missedTd = rowTds[numChoices - 1]
-  missedTd.style.display = 'none'
+  var rowList = choiceRows[rowNum].querySelectorAll('.main-cell')
+  tableMatrix.push(rowList)
+  rowList[numChoices - 1].style.display = 'none' // Hide the last column, which is the one for running out of time
 }
 
 for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted keys) into an array so the field knows when an assigned key has been pressed. Also moves to the next field if a choice has already been selected.
@@ -40,7 +37,8 @@ for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted
 }
 
 if (allowContinue !== 1) { // If not allowed to continue the timer after swiping away, this sets the answer as the missed choice so that if someone tries to swipe back to this, then it will already have a value, so the field will automatically advance
-  setAnswer(missedChoice)
+  console.log('Point 1')
+  setAnswer(missedValue)
 }
 
 if ((allowContinue === 1) && (metadata != null)) {
@@ -72,6 +70,7 @@ function timer () {
   if (timeLeft < 0) {
     timeLeft = 0
     complete = true
+    console.log('Point 2')
     setAnswer(missedValue)
     goToNextField()
   }
@@ -86,31 +85,31 @@ function clicked (e) {
 
 function keypress (e) {
   var key = e.key
-  var keyIndex = allowedKeys.indexOf(key) // If this is -1, then a key that is not a choice was pressed
-  if ((!complete) && (keyIndex !== -1)) {
-    complete = true
-    var selectedTd = choiceTds[keyIndex]
-    selectedTd.style.border = '1px solid #078edf'
-    selectedTd.style.backgroundColor = '#00b2be40'
-    selectedTd.style.borderRadius = '7px'
-    setTimeout(
-      function () {
-        complete = true
-        setAnswer(key)
-        goToNextField()
-      }, 200) // End timeout
-  } // End IF
+  choiceSelected(key)
 } // End keypress
 
 function choiceSelected (choiceValue) {
   var selectedCol = allowedKeys.indexOf(choiceValue)
   if (selectedCol !== -1) {
-
+    for (var rowNum = 0; rowNum < 2; rowNum++) {
+      var selectedCell = tableMatrix[rowNum][selectedCol]
+      var cellStyle = selectedCell.style
+      cellStyle.border = '1px solid #078edf'
+      cellStyle.backgroundColor = '#00b2be40'
+      cellStyle.borderRadius = '7px'
+    }
+    setTimeout( // Use timeout to see what was selected before moving on
+      function () {
+        complete = true
+        console.log('Point 4')
+        setAnswer(key)
+        goToNextField()
+      }, 200) // End timeout
   }
 }
 
 function clearAnswer () {
+  console.log('Point 5')
   setAnswer('')
   startTime = Date.now()
 }
-
