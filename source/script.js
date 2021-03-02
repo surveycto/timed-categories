@@ -16,7 +16,7 @@ var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
 
-var timerH = document.querySelector('#timer')
+var timerContainer = document.querySelector('#timer')
 var keyContainers = document.querySelectorAll('#key')
 var choiceTable = document.querySelector('.choice-table')
 var choiceRows = choiceTable.querySelectorAll('.main-row')
@@ -67,34 +67,45 @@ for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted
 if (metadata == null) {
   timeStart = getPluginParameter('duration') // Time limit on each field in seconds
   if (timeStart == null) {
-    timeStart = 5000
+    timerContainer.style.display = 'none'
+    setMetaData('1') // Set metadata to indicate field has already been opened
   } else {
     timeStart *= 1000 // Converts to ms
   }
 } else if (allowContinue && (!complete || allowchange)) { // The field was previous opened, but can continue
-  var lastLeft
-  [timeStart, lastLeft] = metadata.search(/[^ ]+/g)
-  timeStart = parseInt(timeStart)
-  lastLeft = parseInt(lastLeft)
-  var timeSinceLast = Date.now() - lastLeft
-  timeStart -= timeSinceLast // Remove time spent away from the field
+  complete = false
+  if (timeStart == null) {
+
+  } else {
+    var lastLeft
+    [timeStart, lastLeft] = metadata.search(/[^ ]+/g)
+    timeStart = parseInt(timeStart)
+    lastLeft = parseInt(lastLeft)
+    var timeSinceLast = Date.now() - lastLeft
+    timeStart -= timeSinceLast // Remove time spent away from the field
+  }
 } else { // The field was previous opened, but not allowed to continue
+  if (!complete) {
+    setAnswer(missedValue)
+    complete = true
+  }
   timeLeft = -1
-  complete = true
 }
 
-if (allowclick !== 0) { // Set up click/tap on region
+if (!complete || (allowclick !== 0)) { // Set up click/tap on region
   for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
     var clickArea = clickAreas[tdNum]
     clickArea.addEventListener('click', clicked)
   }
 }
 
-if (allowkeys !== 0) { // Set up press keyboard
+if (!complete || (allowkeys !== 0)) { // Set up press keyboard
   document.addEventListener('keyup', keypress)
 }
 
-setInterval(timer, 1)
+if (timeStart != null) {
+  setInterval(timer, 1)
+}
 
 function timer () {
   if (!complete) {
@@ -112,7 +123,7 @@ function timer () {
     }
     goToNextField()
   }
-  timerH.innerHTML = timeLeft + ' ms'
+  timerContainer.innerHTML = timeLeft + ' ms'
 }
 
 function clicked (e) {
