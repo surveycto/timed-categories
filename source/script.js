@@ -74,11 +74,12 @@ if (metadata == null) {
   }
 } else if (allowContinue && (!complete || allowchange)) { // The field was previous opened, but can continue
   complete = false
-  if (timeStart == null) {
-
+  if (getPluginParameter('duration') == null) {
+    timerContainer.style.display = 'none'
   } else {
     var lastLeft
-    [timeStart, lastLeft] = metadata.search(/[^ ]+/g)
+    [timeStart, lastLeft] = metadata.match(/[^ ]+/g)
+    console.log('Time start and last left:', timeStart, lastLeft)
     timeStart = parseInt(timeStart)
     lastLeft = parseInt(lastLeft)
     var timeSinceLast = Date.now() - lastLeft
