@@ -130,6 +130,9 @@ function clicked (e) {
   console.log('Click!')
   var target = e.srcElement
   var targetId = target.id.substring(7)
+  if (targetId === 'space') {
+    targetId = ' '
+  }
   choiceSelected(targetId)
 }
 
