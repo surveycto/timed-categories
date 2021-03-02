@@ -116,7 +116,6 @@ function timer () {
 
   if (timeLeft < 0) {
     timeLeft = 0
-    console.log('Point 2')
     if (!complete) {
       setAnswer(missedValue)
       complete = true
@@ -152,7 +151,6 @@ function choiceSelected (choiceValue) {
       cellStyle.backgroundColor = '#00b2be40'
       cellStyle.borderRadius = '7px'
     }
-    console.log('Point 4')
     setAnswer(key)
     setTimeout( // Use timeout to see what was selected before moving on
       function () {
@@ -162,7 +160,6 @@ function choiceSelected (choiceValue) {
 }
 
 function clearAnswer () {
-  console.log('Point 5')
   setAnswer('')
   startTime = Date.now()
 }
