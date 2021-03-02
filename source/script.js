@@ -53,7 +53,6 @@ for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted
   var choice = choices[c]
   if (choice.CHOICE_SELECTED) {
     complete = true
-    goToNextField()
   }
 
   var key = choice.CHOICE_VALUE
@@ -79,7 +78,6 @@ if (metadata == null) {
   } else {
     var lastLeft
     [timeStart, lastLeft] = metadata.match(/[^ ]+/g)
-    console.log('Time start and last left:', timeStart, lastLeft)
     timeStart = parseInt(timeStart)
     lastLeft = parseInt(lastLeft)
     var timeSinceLast = Date.now() - lastLeft
