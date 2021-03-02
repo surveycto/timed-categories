@@ -14,12 +14,21 @@ var allowContinue = getPluginParameter('continue')
 var allowchange = getPluginParameter('allowchange')
 var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
+var hidekeys = getPluginParameter('hidekeys')
 
 var timerH = document.querySelector('#timer')
 var keyContainers = document.querySelectorAll('#key')
 var choiceTable = document.querySelector('.choice-table')
 var choiceRows = choiceTable.querySelectorAll('.main-row')
 var clickAreas = choiceRows[1].querySelectorAll('td') // The bottom row is the clickable areas
+
+if (hidekeys === 1) { // Hide the keys to press if the user prefers
+  var keyRows = document.querySelectorAll('.key-row')
+  var numKeyRows = keyRows.length
+  for (var r = 0; r < numKeyRows; r++) {
+    keyRows[r].style.display = 'none'
+  }
+}
 
 if (allowContinue === 0) {
   allowContinue = false
