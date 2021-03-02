@@ -11,12 +11,27 @@ var timeLeft // This will be how much time is left on the timer
 var metadata = getMetaData()
 
 var allowContinue = getPluginParameter('continue')
+var allowchange = getPluginParameter('allowchange')
+var allowkeys = getPluginParameter('allowkeys')
+var allowclick = getPluginParameter('allowclick')
 
 var timerH = document.querySelector('#timer')
 var keyContainers = document.querySelectorAll('#key')
 var choiceTable = document.querySelector('.choice-table')
 var choiceRows = choiceTable.querySelectorAll('.main-row')
 var clickAreas = choiceRows[1].querySelectorAll('td') // The bottom row is the clickable areas
+
+if (allowContinue === 0) {
+  allowContinue = false
+} else {
+  allowContinue = true
+}
+
+if (allowchange === 0) {
+  allowchange = false
+} else {
+  allowchange = true
+}
 
 var tableMatrix = []
 for (var rowNum = 0; rowNum < 2; rowNum++) {
@@ -37,34 +52,36 @@ for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (allowContinue !== 1) { // If not allowed to continue the timer after swiping away, this sets the answer as the missed choice so that if someone tries to swipe back to this, then it will already have a value, so the field will automatically advance
-  console.log('Point 1')
-  setAnswer(missedValue)
-}
-
-if ((allowContinue === 1) && (metadata != null)) { // If there was time left previously (such as if the respondent accidentally swiped back), this lets them continue where they left off
+if (metadata == null) {
+  timeStart = getPluginParameter('duration') // Time limit on each field in seconds
+  if (timeStart == null) {
+    timeStart = 5000
+  } else {
+    timeStart *= 1000 // Converts to ms
+  }
+} else if (allowContinue && (!complete || allowchange)) { // The field was previous opened, but can continue
   var lastLeft
   [timeStart, lastLeft] = metadata.search(/[^ ]+/g)
   timeStart = parseInt(timeStart)
   lastLeft = parseInt(lastLeft)
   var timeSinceLast = Date.now() - lastLeft
   timeStart -= timeSinceLast // Remove time spent away from the field
-} else {
-  timeStart = getPluginParameter('duration') // Time limit on each field in seconds
+} else { // The field was previous opened, but not allowed to continue
+  timeLeft = -1
+  complete = true
+}
 
-  if (timeStart == null) {
-    timeStart = 5000
-  } else {
-    timeStart *= 1000 // Converts to ms
+if (allowclick !== 0) { // Set up click/tap on region
+  for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
+    var clickArea = clickAreas[tdNum]
+    clickArea.addEventListener('click', clicked)
   }
 }
 
-for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
-  var clickArea = clickAreas[tdNum]
-  clickArea.addEventListener('click', clicked)
+if (allowkeys !== 0) { // Set up press keyboard
+  document.addEventListener('keyup', keypress)
 }
 
-document.addEventListener('keyup', keypress)
 setInterval(timer, 1)
 
 function timer () {
@@ -76,9 +93,11 @@ function timer () {
 
   if (timeLeft < 0) {
     timeLeft = 0
-    complete = true
     console.log('Point 2')
-    setAnswer(missedValue)
+    if (!complete) {
+      setAnswer(missedValue)
+      complete = true
+    }
     goToNextField()
   }
   timerH.innerHTML = timeLeft + ' ms'
@@ -97,6 +116,7 @@ function keypress (e) {
 } // End keypress
 
 function choiceSelected (choiceValue) {
+  complete = true
   var selectedCol = allowedKeys.indexOf(choiceValue)
   if (selectedCol !== -1) {
     for (var rowNum = 0; rowNum < 2; rowNum++) {
@@ -106,11 +126,10 @@ function choiceSelected (choiceValue) {
       cellStyle.backgroundColor = '#00b2be40'
       cellStyle.borderRadius = '7px'
     }
+    console.log('Point 4')
+    setAnswer(key)
     setTimeout( // Use timeout to see what was selected before moving on
       function () {
-        complete = true
-        console.log('Point 4')
-        setAnswer(key)
         goToNextField()
       }, 200) // End timeout
   }
