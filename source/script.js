@@ -9,6 +9,7 @@ var startTime = Date.now() // Time code when the field starts
 var timeStart // This will be how much time the timer should start with
 var timeLeft // This will be how much time is left on the timer
 var metadata = getMetaData()
+
 var allowContinue = getPluginParameter('continue')
 
 var timerH = document.querySelector('#timer')
@@ -41,8 +42,13 @@ if (allowContinue !== 1) { // If not allowed to continue the timer after swiping
   setAnswer(missedValue)
 }
 
-if ((allowContinue === 1) && (metadata != null)) {
-  timeStart = parseInt(metadata) // If there was time left previously (such as if the respondent accidentally swiped back), this lets them continue where they left off
+if ((allowContinue === 1) && (metadata != null)) { // If there was time left previously (such as if the respondent accidentally swiped back), this lets them continue where they left off
+  var lastLeft
+  [timeStart, lastLeft] = metadata.search(/[^ ]+/g)
+  timeStart = parseInt(timeStart)
+  lastLeft = parseInt(lastLeft)
+  var timeSinceLast = Date.now() - lastLeft
+  timeStart -= timeSinceLast // Remove time spent away from the field
 } else {
   timeStart = getPluginParameter('duration') // Time limit on each field in seconds
 
@@ -63,8 +69,9 @@ setInterval(timer, 1)
 
 function timer () {
   if (!complete) {
-    timeLeft = startTime + timeStart - Date.now()
-    setMetaData(timeLeft)
+    var timeNow = Date.now()
+    timeLeft = startTime + timeStart - timeNow
+    setMetaData(String(timeLeft) + ' ' + String(timeNow))
   }
 
   if (timeLeft < 0) {
