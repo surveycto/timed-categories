@@ -1,6 +1,7 @@
 {
 	"name" : "Timed categories",
 	"author" : "Dobility",
-	"version": "1.0.0",
-	"supportedFieldTypes": ["select_one"]
+	"version": "1.0.4",
+	"supportedFieldTypes": ["select_one"],
+	"externalJs": ["ResizeSensor.js", "resize.js"]
 }

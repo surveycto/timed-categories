@@ -1,54 +1,56 @@
-<div class="label default-question-text-size" id="label">{{{LABEL}}}</div>
+<div id="#container">
+  <div class="label default-question-text-size" id="label">{{{LABEL}}}</div>
 
-{{#MEDIAIMAGE}}
-<img src="{{MEDIAIMAGE}}" />
-{{/MEDIAIMAGE}}
+  {{#MEDIAIMAGE}}
+  <img src="{{MEDIAIMAGE}}" />
+  {{/MEDIAIMAGE}}
 
-{{#MEDIAAUDIO}}
-<audio controls>
-  <source src="{{MEDIAAUDIO}}">
-  Your browser does not support the audio element.
-</audio>
-{{/MEDIAAUDIO}}
+  {{#MEDIAAUDIO}}
+  <audio controls>
+    <source src="{{MEDIAAUDIO}}">
+    Your browser does not support the audio element.
+  </audio>
+  {{/MEDIAAUDIO}}
 
-{{#MEDIAVIDEO}}
-<video width="100%" height="*" controls>
-  <source src="{{MEDIAVIDEO}}">
-  Your browser does not support the video tag.
-</video>
-{{/MEDIAVIDEO}}
+  {{#MEDIAVIDEO}}
+  <video width="100%" height="*" controls>
+    <source src="{{MEDIAVIDEO}}">
+    Your browser does not support the video tag.
+  </video>
+  {{/MEDIAVIDEO}}
 
-<div class="hint default-hint-text-size" id="hint">{{{HINT}}}</div>
-<div class="timer default-question-text-size" id="timer"></div>
+  <div class="hint default-hint-text-size" id="hint">{{{HINT}}}</div>
+  <div class="timer default-question-text-size" id="timer"></div>
 
-<table class="choice-table">
-  <tr class="main-row top-row">
-    {{#CHOICES}}
-    <td class="choice-disp main-cell">
-      <table>
-        {{#CHOICE_IMAGE}}
-        <tr>
-          <td>
-            {{CHOICE_IMAGE}}
-          </td>
-        </tr>
-        {{/CHOICE_IMAGE}}
-        <tr>
-          <td class="choice-label">
-            {{CHOICE_LABEL}}
-          </td>
-        </tr>
-        <tr>
-          <td class="choice-label" id="key">
-          </td>
-        </tr>
-      </table>
-    </td>
-    {{/CHOICES}}
-  </tr>
-  <tr class="main-row bottom-row">
-    {{#CHOICES}}
-    <td id=choice-{{CHOICE_VALUE}} class="main-cell">&nbsp;</td>
-    {{/CHOICES}}
-  </tr>
-</table>
+  <table class="choice-table">
+    <tr class="main-row top-row">
+      {{#CHOICES}}
+      <td class="choice-disp main-cell">
+        <table>
+          {{#CHOICE_IMAGE}}
+          <tr>
+            <td>
+              {{CHOICE_IMAGE}}
+            </td>
+          </tr>
+          {{/CHOICE_IMAGE}}
+          <tr>
+            <td class="choice-label">
+              {{CHOICE_LABEL}}
+            </td>
+          </tr>
+          <tr>
+            <td class="choice-label" id="key">
+            </td>
+          </tr>
+        </table>
+      </td>
+      {{/CHOICES}}
+    </tr>
+    <tr class="main-row bottom-row">
+      {{#CHOICES}}
+      <td id=choice-{{CHOICE_VALUE}} class="main-cell">&nbsp;</td>
+      {{/CHOICES}}
+    </tr>
+  </table>
+</div>
