@@ -57,6 +57,9 @@ for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted
   }
 
   var key = choice.CHOICE_VALUE
+  if (key === 'space') {
+    key = ' '
+  }
   allowedKeys.push(key)
   keyContainers[c].innerHTML = key.toUpperCase()
 }
