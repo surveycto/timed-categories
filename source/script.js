@@ -83,7 +83,7 @@ if (metadata == null) {
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
   }
-} else { // The field was previous opened, but not allowed to continue
+} else { // The field was previously opened, but not allowed to continue
   if (!complete) {
     setAnswer(missedValue)
     complete = true
@@ -150,7 +150,11 @@ function choiceSelected (choiceValue) {
       cellStyle.backgroundColor = '#00b2be40'
       cellStyle.borderRadius = '7px'
     }
-    setAnswer(key)
+    if (choiceValue === ' ') {
+      setAnswer('space')
+    } else {
+      setAnswer(choiceValue)
+    }
     setTimeout( // Use timeout to see what was selected before moving on
       function () {
         goToNextField()
