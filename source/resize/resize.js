@@ -17,7 +17,7 @@ if (frameAdjust == null) {
   }
 }
 
-var mainElement = document.querySelector('#container')
+var changingElement = document.querySelector('.choice-table')
 
 var platform
 if (document.body.className.indexOf('web-collect') >= 0) {
@@ -30,7 +30,7 @@ if (platform === 'web') {
   parent.onresize = adjustWindow
   try {
     var iframe = parent.document.querySelector('iframe')
-    mainElement.onscroll = function () {
+    changingElement.onscroll = function () {
       iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the iframe becomes way to long, so this makes it smaller again
     }
   } catch (e) {
@@ -42,22 +42,24 @@ if (platform === 'web') {
 
 adjustWindow()
 
-ResizeSensor(mainElement, adjustWindow) // Adjust whenever the size of the mainElement changes
+ResizeSensor(changingElement, adjustWindow) // Adjust whenever the size of the changingElement changes
 
 function adjustWindow () {
+  console.log('Resizing')
   var usedHeight // This will be an estimation of how much height has already been used by the interface
   var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
 
   if (platform === 'web') {
-    usedHeight = 355 // This is an estimation for web collect
+    usedHeight = 445 // This is an estimation for web collect
     windowHeight = parent.outerHeight // Height of the document of the web page.
+    console.log('Parent height:', windowHeight)
   } else {
-    usedHeight = 200 // This is an estimation for mobile devices
+    usedHeight = 350 // This is an estimation for mobile devices
     windowHeight = window.screen.height // Height of the device.
   }
-  var shiftPos = mainElement.getBoundingClientRect().top
-
+  var shiftPos = changingElement.getBoundingClientRect().top
   var containerHeight = windowHeight - shiftPos - usedHeight + frameAdjust // What the height of the scrolling container should be
 
-  mainElement.style.height = String(containerHeight) + 'px'
+  changingElement.style.height = String(containerHeight) + 'px'
+  console.log('Adjusting to', containerHeight)
 }

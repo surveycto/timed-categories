@@ -16,7 +16,6 @@
 table.choice-table{
   border-collapse: collapse;
   border-style: hidden;
-  height: 100%;
   table-layout: fixed;
   width: 100%;
 }
@@ -25,15 +24,12 @@ table.choice-table table {
   margin: auto;
 }
 
-td.main-cell {
+td.choice-disp {
+  height: 1px;
+  padding: 5px 0 5px 0;
   text-align: center;
+}
+
+td.main-cell {
   border: solid black 1px;
-}
-
-tr.top-row {
-  height: 20%;
-}
-
-tr.bottom-row {
-  height: 200px;
 }
