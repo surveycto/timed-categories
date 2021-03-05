@@ -54,7 +54,7 @@ function adjustWindow () {
     windowHeight = parent.outerHeight // Height of the document of the web page.
     console.log('Parent height:', windowHeight)
   } else {
-    usedHeight = 350 // This is an estimation for mobile devices
+    usedHeight = 200 // This is an estimation for mobile devices
     windowHeight = window.screen.height // Height of the device.
   }
   var shiftPos = changingElement.getBoundingClientRect().top
