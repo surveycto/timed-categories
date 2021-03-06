@@ -15,13 +15,18 @@
 
 table.choice-table{
   border-collapse: collapse;
-  border-style: hidden;
+  /* border-style: hidden; */
   table-layout: fixed;
-  width: 100%;
+  width: 99%;
 }
 
 table.choice-table table {
   margin: auto;
+}
+
+tr.top-row {
+  border-style: hidden;
+  border-bottom: solid black 1px; /* This needs to go after border-style */
 }
 
 td.choice-disp {
