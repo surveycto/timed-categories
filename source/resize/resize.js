@@ -56,7 +56,7 @@ function adjustWindow () {
     windowHeight = window.screen.height // Height of the device.
   }
   var shiftPos = changingElement.getBoundingClientRect().top
-  var containerHeight = windowHeight - shiftPos - usedHeight + frameAdjust // What the height of the scrolling container should be
+  var containerHeight = Math.floor(windowHeight - shiftPos - usedHeight + frameAdjust) // What the height of the scrolling container should be
 
   changingElement.style.height = String(containerHeight) + 'px'
 }
