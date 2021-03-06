@@ -22,7 +22,8 @@ var timerContainer = document.querySelector('#timer')
 var keyContainers = document.querySelectorAll('#key')
 var choiceTable = document.querySelector('.choice-table')
 var choiceRows = choiceTable.querySelectorAll('.main-row')
-var clickAreas = choiceRows[1].querySelectorAll('td') // The bottom row is the clickable areas
+var clickAreas = choiceRows[1].querySelectorAll('td') // The bottom row is the clickable areas\
+var choiceLabelContainers = document.querySelectorAll('.choice-label')
 
 if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the user prefers
   var keyRows = document.querySelectorAll('.key-row')
@@ -49,6 +50,11 @@ for (var rowNum = 0; rowNum < 2; rowNum++) {
   var rowList = choiceRows[rowNum].querySelectorAll('.main-cell')
   tableMatrix.push(rowList)
   rowList[numChoices - 1].style.display = 'none' // Hide the last column, which is the one for running out of time
+}
+
+for (var c = 0; c < numChoices - 1; c++) {
+  var labelContainer = choiceLabelContainers[c]
+  labelContainer.innerHTML = unEntity(labelContainer.innerHTML)
 }
 
 for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted keys) into an array so the field knows when an assigned key has been pressed. Also moves to the next field if a choice has already been selected.
@@ -177,6 +183,10 @@ function setUnit () {
     timeUnit = 's'
     timeDivider = 1000
   }
+}
+
+function unEntity (str) {
+  return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
 }
 
 function clearAnswer () {
