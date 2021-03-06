@@ -18,9 +18,9 @@
 }
 
 table.choice-table{
-  border: solid black 1px;
   border-collapse: collapse;
   margin: auto;
+  margin-bottom: 1px;
   table-layout: fixed;
   width: 99%;
 }
