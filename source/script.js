@@ -9,6 +9,8 @@ var startTime = Date.now() // Time code when the field starts
 var timeStart // This will be how much time the timer should start with
 var timeLeft // This will be how much time is left on the timer
 var metadata = getMetaData()
+var timeUnit
+var timeDivider
 
 var allowContinue = getPluginParameter('continue')
 var allowchange = getPluginParameter('allowchange')
@@ -69,6 +71,7 @@ if (metadata == null) {
     timerContainer.style.display = 'none'
     setMetaData('1') // Set metadata to indicate field has already been opened
   } else {
+    setUnit()
     timeStart *= 1000 // Converts to ms
   }
 } else if (allowContinue && (!complete || allowchange)) { // The field was previous opened, but can continue
@@ -76,6 +79,7 @@ if (metadata == null) {
   if (getPluginParameter('duration') == null) {
     timerContainer.style.display = 'none'
   } else {
+    setUnit()
     var lastLeft
     [timeStart, lastLeft] = metadata.match(/[^ ]+/g)
     timeStart = parseInt(timeStart)
@@ -121,7 +125,7 @@ function timer () {
     }
     goToNextField()
   }
-  timerContainer.innerHTML = timeLeft + ' ms'
+  timerContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit
 }
 
 function clicked (e) {
@@ -159,6 +163,20 @@ function choiceSelected (choiceValue) {
       function () {
         goToNextField()
       }, 200) // End timeout
+  }
+}
+
+function setUnit () {
+  timeUnit = getPluginParameter('unit')
+  if (timeUnit === 'ms') {
+    timeDivider = 1
+  } else if (timeUnit === 'cs') {
+    timeDivider = 10
+  } else if (timeUnit === 'ds') {
+    timeDivider = 100
+  } else {
+    timeUnit = 's'
+    timeDivider = 1000
   }
 }
 
