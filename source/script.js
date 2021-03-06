@@ -24,7 +24,7 @@ var choiceTable = document.querySelector('.choice-table')
 var choiceRows = choiceTable.querySelectorAll('.main-row')
 var clickAreas = choiceRows[1].querySelectorAll('td') // The bottom row is the clickable areas
 
-if (hidekeys === 1) { // Hide the keys to press if the user prefers
+if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the user prefers
   var keyRows = document.querySelectorAll('.key-row')
   var numKeyRows = keyRows.length
   for (var r = 0; r < numKeyRows; r++) {
@@ -95,14 +95,14 @@ if (metadata == null) {
   timeLeft = -1
 }
 
-if (!complete || (allowclick !== 0)) { // Set up click/tap on region
+if (!complete && (allowclick !== 0)) { // Set up click/tap on region
   for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
     var clickArea = clickAreas[tdNum]
     clickArea.addEventListener('click', clicked)
   }
 }
 
-if (!complete || (allowkeys !== 0)) { // Set up press keyboard
+if (!complete && (allowkeys !== 0)) { // Set up press keyboard
   document.addEventListener('keyup', keypress)
 }
 
