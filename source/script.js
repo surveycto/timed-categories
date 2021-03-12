@@ -52,17 +52,16 @@ for (var rowNum = 0; rowNum < 2; rowNum++) {
   rowList[numChoices - 1].style.display = 'none' // Hide the last column, which is the one for running out of time
 }
 
-for (var c = 0; c < numChoices - 1; c++) {
+for (let c = 0; c < numChoices - 1; c++) {
+  // Might as well un-entity while here
   var labelContainer = choiceLabelContainers[c]
   labelContainer.innerHTML = unEntity(labelContainer.innerHTML)
-}
 
-for (let c = 0; c < numChoices; c++) { // Stores choice values (aka the accepted keys) into an array so the field knows when an assigned key has been pressed. Also moves to the next field if a choice has already been selected.
+  // Stores choice values (aka the accepted keys) into an array so the field knows when an assigned key has been pressed. Also moves to the next field if a choice has already been selected.
   var choice = choices[c]
   if (choice.CHOICE_SELECTED) {
     complete = true
   }
-
   var key = choice.CHOICE_VALUE
   if (key === 'space') {
     key = ' '
