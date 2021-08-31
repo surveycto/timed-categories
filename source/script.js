@@ -151,7 +151,7 @@ function choiceSelected (choiceValue) {
     setAnswer(choiceValue)
     setTimeout( // Use timeout to see what was selected before moving on
       function () {
-        // goToNextField()
+        goToNextField()
       }, 200) // End timeout
   }
 }
