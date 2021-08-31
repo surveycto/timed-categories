@@ -20,10 +20,19 @@ var hidekeys = getPluginParameter('hidekeys')
 
 var timerContainer = document.querySelector('#timer')
 var keyContainers = document.querySelectorAll('#key')
-var choiceTable = document.querySelector('.choice-table')
-var choiceRows = choiceTable.querySelectorAll('.main-row')
-var clickAreas = choiceRows[1].querySelectorAll('td') // The bottom row is the clickable areas\
-var choiceLabelContainers = document.querySelectorAll('.choice-label')
+var clickAreas = document.querySelectorAll('.main-cell')
+var choiceLabelContainers = document.querySelectorAll('.choice-label') // Used later to unEntity
+
+var tdObj = {} // Key is the choice value, and value is the corresponding TD element. Used to highlight the element later
+for (var e = 0; e < numChoices; e++) {
+  var thisElement = clickAreas[e]
+  var elementId = thisElement.id.substr(7) // Remove the "choice-" from the ID to get the choice value
+  tdObj[elementId] = thisElement
+  console.log(elementId)
+  console.log(thisElement)
+}
+
+clickAreas[numChoices - 1].style.display = 'none'
 
 if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the user prefers
   var keyRows = document.querySelectorAll('.key-row')
@@ -43,13 +52,6 @@ if (allowchange === 0) {
   allowchange = false
 } else {
   allowchange = true
-}
-
-var tableMatrix = []
-for (var rowNum = 0; rowNum < 2; rowNum++) {
-  var rowList = choiceRows[rowNum].querySelectorAll('.main-cell')
-  tableMatrix.push(rowList)
-  rowList[numChoices - 1].style.display = 'none' // Hide the last column, which is the one for running out of time
 }
 
 for (let c = 0; c < numChoices - 1; c++) {
@@ -103,7 +105,13 @@ if (metadata == null) {
 if (!complete && (allowclick !== 0)) { // Set up click/tap on region
   for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
     var clickArea = clickAreas[tdNum]
-    clickArea.addEventListener('click', clicked)
+    clickArea.addEventListener('click', function () {
+      var targetId = clickArea.id.substr(7)
+      if (targetId === 'space') {
+        targetId = ' '
+      }
+      choiceSelected(targetId)
+    })
   }
 }
 
@@ -133,15 +141,6 @@ function timer () {
   timerContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit
 }
 
-function clicked (e) {
-  var target = e.srcElement
-  var targetId = target.id.substring(7)
-  if (targetId === 'space') {
-    targetId = ' '
-  }
-  choiceSelected(targetId)
-}
-
 function keypress (e) {
   var key = e.key
   choiceSelected(key)
@@ -150,14 +149,10 @@ function keypress (e) {
 function choiceSelected (choiceValue) {
   complete = true
   var selectedCol = allowedKeys.indexOf(choiceValue)
+  console.log('Value: |' + choiceValue + '|')
   if (selectedCol !== -1) {
-    for (var rowNum = 0; rowNum < 2; rowNum++) {
-      var selectedCell = tableMatrix[rowNum][selectedCol]
-      var cellStyle = selectedCell.style
-      cellStyle.border = '1px solid #078edf'
-      cellStyle.backgroundColor = '#00b2be40'
-      cellStyle.borderRadius = '7px'
-    }
+    var highlightElement = tdObj[choiceValue]
+    highlightElement.classList.add('tapped')
     if (choiceValue === ' ') {
       setAnswer('space')
     } else {

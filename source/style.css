@@ -43,3 +43,9 @@ td.choice-disp {
 td.main-cell {
   border: solid black 1px;
 }
+
+td.tapped {
+  border: 1px solid #078edf;
+  background-color: #00b2be40;
+  border-radius: 7px;
+}

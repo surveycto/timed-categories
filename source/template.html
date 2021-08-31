@@ -24,7 +24,7 @@
 <table class="choice-table">
   <tr class="main-row top-row">
     {{#CHOICES}}
-    <td class="choice-disp main-cell">
+    <td class="choice-disp main-cell" id="choice-{{CHOICE_VALUE}}">
       <table>
         <tr>
           <td>
@@ -42,11 +42,6 @@
         </tr>
       </table>
     </td>
-    {{/CHOICES}}
-  </tr>
-  <tr class="main-row bottom-row">
-    {{#CHOICES}}
-    <td id=choice-{{CHOICE_VALUE}} class="main-cell">&nbsp;</td>
     {{/CHOICES}}
   </tr>
 </table>
