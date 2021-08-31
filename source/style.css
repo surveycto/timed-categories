@@ -30,23 +30,20 @@ table.choice-table table {
 }
 
 tr.top-row {
-  border-style: hidden;
   border-bottom: solid black 1px; /* This needs to go after border-style */
-}
-
-td.choice-disp {
-  height: 1px;
-  padding: 5px 0 5px 0;
-  text-align: center;
+  border-style: hidden;
 }
 
 td.main-cell {
   border: solid black 1px;
+  height: 1px;
+  padding: 5px 0 5px 0;
+  text-align: center;
   vertical-align: top;
 }
 
 td.tapped {
-  border: 1px solid #078edf;
   background-color: #00b2be40;
+  border: 1px solid #078edf;
   border-radius: 7px;
 }
