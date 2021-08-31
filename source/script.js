@@ -28,8 +28,6 @@ for (var e = 0; e < numChoices; e++) {
   var thisElement = clickAreas[e]
   var elementId = thisElement.id.substr(7) // Remove the "choice-" from the ID to get the choice value
   tdObj[elementId] = thisElement
-  console.log(elementId)
-  console.log(thisElement)
 }
 
 clickAreas[numChoices - 1].style.display = 'none'
@@ -65,9 +63,6 @@ for (let c = 0; c < numChoices - 1; c++) {
     complete = true
   }
   var key = choice.CHOICE_VALUE
-  if (key === 'space') {
-    key = ' '
-  }
   allowedKeys.push(key)
   keyContainers[c].innerHTML = key.toUpperCase()
 }
@@ -105,12 +100,10 @@ if (metadata == null) {
 if (!complete && (allowclick !== 0)) { // Set up click/tap on region
   for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
     var clickArea = clickAreas[tdNum]
-    clickArea.addEventListener('click', function () {
-      var targetId = clickArea.id.substr(7)
-      if (targetId === 'space') {
-        targetId = ' '
-      }
-      choiceSelected(targetId)
+    clickArea.addEventListener('click', function (e) {
+      var eventTarget = e.currentTarget
+      var choiceId = eventTarget.id.substr(7)
+      choiceSelected(choiceId)
     })
   }
 }
@@ -147,20 +140,18 @@ function keypress (e) {
 } // End keypress
 
 function choiceSelected (choiceValue) {
+  if (choiceValue === ' ') {
+    choiceValue = 'space'
+  }
   complete = true
   var selectedCol = allowedKeys.indexOf(choiceValue)
-  console.log('Value: |' + choiceValue + '|')
   if (selectedCol !== -1) {
     var highlightElement = tdObj[choiceValue]
     highlightElement.classList.add('tapped')
-    if (choiceValue === ' ') {
-      setAnswer('space')
-    } else {
-      setAnswer(choiceValue)
-    }
+    setAnswer(choiceValue)
     setTimeout( // Use timeout to see what was selected before moving on
       function () {
-        goToNextField()
+        // goToNextField()
       }, 200) // End timeout
   }
 }
