@@ -26,11 +26,13 @@
     {{#CHOICES}}
     <td class="choice-disp main-cell" id="choice-{{CHOICE_VALUE}}">
       <table>
+        {{#CHOICE_IMAGE}}
         <tr>
           <td>
             <img src="{{CHOICE_IMAGE}}" />
           </td>
         </tr>
+        {{/CHOICE_IMAGE}}
         <tr>
           <td class="choice-label">
             {{CHOICE_LABEL}}
