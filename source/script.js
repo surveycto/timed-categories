@@ -1,16 +1,16 @@
 /* global getMetaData, setMetaData, setAnswer, goToNextField, fieldProperties, getPluginParameter */
 
-var complete = false
-var allowedKeys = [] // Each goes into an array so they can be joined by a non-breaking space.
+var complete = false // {bool} If field is complete, then don't set up the even listeners, so a fast respondent can't change their answer
+var allowedKeys = [] // Each goes into an array so it can be confirmed a legitimate keyboard key was pressed
 var choices = fieldProperties.CHOICES
 var numChoices = choices.length
-var missedValue = choices[numChoices - 1].CHOICE_VALUE
-var startTime = Date.now() // Time code when the field starts
-var timeStart // This will be how much time the timer should start with
-var timeLeft // This will be how much time is left on the timer
+var missedValue = choices[numChoices - 1].CHOICE_VALUE // {string} Value to be saved when time runs out before a choice can be selected
+var startTime = Date.now() // {number} Time code when the field starts
+var timeStart // {number} How much time the timer should start with. To be set by field plug-in parameter
+var timeLeft // {number} How much time is left on the timer
 var metadata = getMetaData()
-var timeUnit
-var timeDivider
+var timeUnit // {string} Time unit to be displayed
+var timeDivider // {number} Based on the timeUnit, what the ms time will be divided by for display to the user
 
 var allowContinue = getPluginParameter('continue')
 var allowchange = getPluginParameter('allowchange')
@@ -19,9 +19,9 @@ var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
 
 var timerContainer = document.querySelector('#timer')
-var keyContainers = document.querySelectorAll('#key')
-var clickAreas = document.querySelectorAll('.main-cell')
-var choiceLabelContainers = document.querySelectorAll('.choice-label') // Used later to unEntity
+var keyContainers = document.querySelectorAll('#key') // {Array<Element>} Where the key to press will be displayed
+var clickAreas = document.querySelectorAll('.main-cell') // {Array<Element>} Clickable areas
+var choiceLabelContainers = document.querySelectorAll('.choice-label') // {Array<Element>} Used later to unEntity
 
 var tdObj = {} // Key is the choice value, and value is the corresponding TD element. Used to highlight the element later
 for (var e = 0; e < numChoices; e++) {
@@ -30,7 +30,7 @@ for (var e = 0; e < numChoices; e++) {
   tdObj[elementId] = thisElement
 }
 
-clickAreas[numChoices - 1].style.display = 'none'
+clickAreas[numChoices - 1].style.display = 'none' // Hide the "pass" element
 
 if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the user prefers
   var keyRows = document.querySelectorAll('.key-row')
@@ -57,39 +57,39 @@ for (let c = 0; c < numChoices - 1; c++) {
   var labelContainer = choiceLabelContainers[c]
   labelContainer.innerHTML = unEntity(labelContainer.innerHTML)
 
-  // Stores choice values (aka the accepted keys) into an array so the field knows when an assigned key has been pressed. Also moves to the next field if a choice has already been selected.
+  // Stores choice values (aka the accepted keys) into an array so the field knows when an actually assigned key has been pressed.
   var choice = choices[c]
   if (choice.CHOICE_SELECTED) {
-    complete = true
+    complete = true // If a choice has been selected, then the field is complete, which might lead to some of the event listeners not being created. That way, a fast respondent cannot change their answer
   }
   var key = choice.CHOICE_VALUE
   allowedKeys.push(key)
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (metadata == null) {
+if (metadata == null) { // If empty, then this is the first time the field was opened. By far the most common situation.
   timeStart = getPluginParameter('duration') // Time limit on each field in seconds
-  if (timeStart == null) {
+  if (timeStart == null) { // Hide timer if no time given
     timerContainer.style.display = 'none'
-    setMetaData('1') // Set metadata to indicate field has already been opened
-  } else {
+    setMetaData('1') // Set metadata to indicate field has already been opened, instead of storing the current time
+  } else { // There is a timer, so set it up
     setUnit()
     timeStart *= 1000 // Converts to ms
   }
-} else if (allowContinue && (!complete || allowchange)) { // The field was previous opened, but can continue
-  complete = false
+} else if (allowContinue && (!complete || allowchange)) { // The field was previously opened, but parameters say allowed to continue
+  complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.
   if (getPluginParameter('duration') == null) {
     timerContainer.style.display = 'none'
-  } else {
+  } else { // Get time from last time, calculate how much time has passed, and set the current time based on how much time has passed
     setUnit()
-    var lastLeft
-    [timeStart, lastLeft] = metadata.match(/[^ ]+/g)
+    var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
+    [timeStart, lastLeft] = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
     timeStart = parseInt(timeStart)
     lastLeft = parseInt(lastLeft)
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
   }
-} else { // The field was previously opened, but not allowed to continue
+} else { // The field was previously opened, but not allowed to continue, so will set timeLeft to -1 so it will automatically skip ahead
   if (!complete) {
     setAnswer(missedValue)
     complete = true
@@ -108,7 +108,7 @@ if (!complete && (allowclick !== 0)) { // Set up click/tap on region
   }
 }
 
-if (!complete && (allowkeys !== 0)) { // Set up press keyboard
+if (!complete && (allowkeys !== 0)) { // Set up keyboard event listener if allowed
   document.addEventListener('keyup', keypress)
 }
 
@@ -116,14 +116,17 @@ if (timeStart != null) {
   setInterval(timer, 1)
 }
 
+/**
+ * Runs as much as possible. Takes the current time stamp with the starting time stamp, and determines how much time is remaining. When time runs out, move on to the next field.
+ */
 function timer () {
   if (!complete) {
     var timeNow = Date.now()
     timeLeft = startTime + timeStart - timeNow
-    setMetaData(String(timeLeft) + ' ' + String(timeNow))
+    setMetaData(String(timeLeft) + ' ' + String(timeNow)) // Save the time, so if the respondent leaves and comes back, can remove the time passed so far, as well as the time passed while they were gone
   }
 
-  if (timeLeft < 0) {
+  if (timeLeft < 0) { // Stop the timer when time runs out. Using <0 instead of <=0 so does not keep setting the answer and going to the next field, and will only do it once.
     timeLeft = 0
     if (!complete) {
       setAnswer(missedValue)
@@ -131,24 +134,32 @@ function timer () {
     }
     goToNextField()
   }
-  timerContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit
+  timerContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
 }
 
+/**
+ * Called when a keyboard key is pressed
+ * @param {Event} e Key press event, used to get key pressed
+ */
 function keypress (e) {
   var key = e.key
   choiceSelected(key)
 } // End keypress
 
-function choiceSelected (choiceValue) {
-  if (choiceValue === ' ') {
+/**
+ * Check the key pressed (or box clicked), and make sure it is a valid choice value. If it is, highlight the corresponding box, set the field value, quick pause to see highlighting, and move on to the next field
+ * @param {string} choiceValue Value of box clicked, or key pressed
+ */
+function choiceSelected (choiceValue) { // When a box is clicked or a key is pressed
+  if (choiceValue === ' ') { // If the spacebar was pressed, then that corresponds to the "space" choice value
     choiceValue = 'space'
   }
-  complete = true
   var selectedCol = allowedKeys.indexOf(choiceValue)
   if (selectedCol !== -1) {
-    var highlightElement = tdObj[choiceValue]
-    highlightElement.classList.add('tapped')
+    var highlightElement = tdObj[choiceValue] // Find element to highlight
+    highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
     setAnswer(choiceValue)
+    complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
     setTimeout( // Use timeout to see what was selected before moving on
       function () {
         goToNextField()
@@ -156,6 +167,9 @@ function choiceSelected (choiceValue) {
   }
 }
 
+/**
+ * Used to display time with preferred unit
+ */
 function setUnit () {
   timeUnit = getPluginParameter('unit')
   if (timeUnit === 'ms') {
@@ -170,10 +184,18 @@ function setUnit () {
   }
 }
 
+/**
+ * Takes HTML entities for < and >, and replaces them with the actual characters so HTML styling can be taken from field references
+ * @param {string} str String that should be unentitied
+ * @returns 
+ */
 function unEntity (str) {
   return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
 }
 
+/**
+ * Clear the current answer, starting over
+ */
 function clearAnswer () {
   setAnswer('')
   startTime = Date.now()
