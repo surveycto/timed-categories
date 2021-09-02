@@ -61,7 +61,9 @@ tr.top-row {
 }
 
 td.main-cell {
+  background-color: #e8e8e8;
   border: solid black 1px;
+  border-radius: 10px;
   height: 1px;
   padding: 5px 0 5px 0;
   text-align: center;
