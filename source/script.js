@@ -72,33 +72,28 @@ for (let c = 0; c < numChoices - 1; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (metadata == null) { // If empty, then this is the first time the field was opened. By far the most common situation.
-  if (durationStart == null) { // Hide timer if no time given
-    timerContainer.style.display = 'none'
-    setMetaData('1') // Set metadata to indicate field has already been opened, instead of storing the current time
-  } else { // There is a timer, so set it up
-    setUnit()
+if (durationStart == null) {
+  // Does nothing for now
+} else {
+  timerContainer.style.display = ''
+  setUnit()
+  if (metadata == null) {
     timeStart = durationStart * 1000 // Converts to ms
-  }
-} else if (allowContinue && (!complete || allowchange)) { // The field was previously opened, but parameters say allowed to continue
-  complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.
-  if (getPluginParameter('duration') == null) {
-    timerContainer.style.display = 'none'
-  } else { // Get time from last time, calculate how much time has passed, and set the current time based on how much time has passed
-    setUnit()
+  } else if (allowContinue && (!complete || allowchange)) {
+    complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     [timeStart, lastLeft] = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
     timeStart = parseInt(timeStart)
     lastLeft = parseInt(lastLeft)
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
+  } else { // The field was previously opened, but not allowed to continue, so setting timeLeft to -1 so it will automatically skip ahead
+    if (!complete) {
+      setAnswer(missedValue)
+      complete = true
+    }
+    timeLeft = -1
   }
-} else { // The field was previously opened, but not allowed to continue, so will set timeLeft to -1 so it will automatically skip ahead
-  if (!complete) {
-    setAnswer(missedValue)
-    complete = true
-  }
-  timeLeft = -1
 }
 
 if (!complete && (allowclick !== 0)) { // Set up click/tap on region
