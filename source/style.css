@@ -43,7 +43,7 @@ svg.timer-shell .timer-circle {
   display: block;
   color: #000000;
   font-size: var(--timer-font);
-  margin-top: calc(var(--timer-diameter) * -0.5 - var(--timer-font)/3*2);
+  margin-top: calc(var(--timer-diameter) * -0.5 - var(--timer-font)/3*2 - 1px);
 }
 
 table.choice-table{
