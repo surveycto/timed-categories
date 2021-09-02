@@ -12,13 +12,18 @@ var metadata = getMetaData()
 var timeUnit // {string} Time unit to be displayed
 var timeDivider // {number} Based on the timeUnit, what the ms time will be divided by for display to the user
 
+var durationStart = getPluginParameter('duration')
 var allowContinue = getPluginParameter('continue')
 var allowchange = getPluginParameter('allowchange')
 var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
 
-var timerContainer = document.querySelector('#timer')
+var timerContainer = document.querySelector('.timer-container')
+var timeNumberContainer = timerContainer.querySelector('.timer')
+
+var timerCircle = document.querySelector('.timer-circle')
+
 var keyContainers = document.querySelectorAll('#key') // {Array<Element>} Where the key to press will be displayed
 var clickAreas = document.querySelectorAll('.main-cell') // {Array<Element>} Clickable areas
 var choiceLabelContainers = document.querySelectorAll('.choice-label') // {Array<Element>} Used later to unEntity
@@ -67,34 +72,28 @@ for (let c = 0; c < numChoices - 1; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (metadata == null) { // If empty, then this is the first time the field was opened. By far the most common situation.
-  timeStart = getPluginParameter('duration') // Time limit on each field in seconds
-  if (timeStart == null) { // Hide timer if no time given
-    timerContainer.style.display = 'none'
-    setMetaData('1') // Set metadata to indicate field has already been opened, instead of storing the current time
-  } else { // There is a timer, so set it up
-    setUnit()
-    timeStart *= 1000 // Converts to ms
-  }
-} else if (allowContinue && (!complete || allowchange)) { // The field was previously opened, but parameters say allowed to continue
-  complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.
-  if (getPluginParameter('duration') == null) {
-    timerContainer.style.display = 'none'
-  } else { // Get time from last time, calculate how much time has passed, and set the current time based on how much time has passed
-    setUnit()
+if (durationStart == null) {
+  // Does nothing for now
+} else {
+  timerContainer.style.display = ''
+  setUnit()
+  if (metadata == null) {
+    timeStart = durationStart * 1000 // Converts to ms
+  } else if (allowContinue && (!complete || allowchange)) {
+    complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     [timeStart, lastLeft] = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
     timeStart = parseInt(timeStart)
     lastLeft = parseInt(lastLeft)
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
+  } else { // The field was previously opened, but not allowed to continue, so setting timeLeft to -1 so it will automatically skip ahead
+    if (!complete) {
+      setAnswer(missedValue)
+      complete = true
+    }
+    timeLeft = -1
   }
-} else { // The field was previously opened, but not allowed to continue, so will set timeLeft to -1 so it will automatically skip ahead
-  if (!complete) {
-    setAnswer(missedValue)
-    complete = true
-  }
-  timeLeft = -1
 }
 
 if (!complete && (allowclick !== 0)) { // Set up click/tap on region
@@ -112,7 +111,9 @@ if (!complete && (allowkeys !== 0)) { // Set up keyboard event listener if allow
   document.addEventListener('keyup', keypress)
 }
 
-if (timeStart != null) {
+if (durationStart != null) {
+  timerCircle.style.animation = String(durationStart) + 's' + ' circletimer linear forwards'
+  timerCircle.style.animationDelay = '-' + String(Math.ceil(durationStart - (timeStart / 1000))) + 's' // Delay in case returning to field
   setInterval(timer, 1)
 }
 
@@ -134,7 +135,7 @@ function timer () {
     }
     goToNextField()
   }
-  timerContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
+  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
 }
 
 /**
@@ -187,7 +188,7 @@ function setUnit () {
 /**
  * Takes HTML entities for < and >, and replaces them with the actual characters so HTML styling can be taken from field references
  * @param {string} str String that should be unentitied
- * @returns 
+ * @returns {string}
  */
 function unEntity (str) {
   return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
