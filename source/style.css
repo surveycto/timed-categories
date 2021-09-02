@@ -64,7 +64,6 @@ td.main-cell {
   background-color: #e8e8e8;
   border: solid black 1px;
   border-radius: 10px;
-  height: 1px;
   padding: 5px 0 5px 0;
   text-align: center;
   vertical-align: top;
@@ -77,5 +76,4 @@ td.main-cell > table {
 td.tapped {
   background-color: #CDE5F3;
   border: 1px solid #078edf;
-  border-radius: 7px;
 }
