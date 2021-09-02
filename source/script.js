@@ -12,6 +12,7 @@ var metadata = getMetaData()
 var timeUnit // {string} Time unit to be displayed
 var timeDivider // {number} Based on the timeUnit, what the ms time will be divided by for display to the user
 
+var durationStart = getPluginParameter('duration')
 var allowContinue = getPluginParameter('continue')
 var allowchange = getPluginParameter('allowchange')
 var allowkeys = getPluginParameter('allowkeys')
@@ -72,13 +73,12 @@ for (let c = 0; c < numChoices - 1; c++) {
 }
 
 if (metadata == null) { // If empty, then this is the first time the field was opened. By far the most common situation.
-  timeStart = getPluginParameter('duration') // Time limit on each field in seconds
-  if (timeStart == null) { // Hide timer if no time given
+  if (durationStart == null) { // Hide timer if no time given
     timerContainer.style.display = 'none'
     setMetaData('1') // Set metadata to indicate field has already been opened, instead of storing the current time
   } else { // There is a timer, so set it up
     setUnit()
-    timeStart *= 1000 // Converts to ms
+    timeStart = durationStart * 1000 // Converts to ms
   }
 } else if (allowContinue && (!complete || allowchange)) { // The field was previously opened, but parameters say allowed to continue
   complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.
@@ -116,8 +116,9 @@ if (!complete && (allowkeys !== 0)) { // Set up keyboard event listener if allow
   document.addEventListener('keyup', keypress)
 }
 
-if (timeStart != null) {
-  timerCircle.style.animation = String(timeStart / 1000) + 's' + ' circletimer linear forwards'
+if (durationStart != null) {
+  timerCircle.style.animation = String(durationStart) + 's' + ' circletimer linear forwards'
+  timerCircle.style.animationDelay = '-' + String(Math.ceil(durationStart - (timeStart / 1000))) + 's' // Delay in case returning to field
   setInterval(timer, 1)
 }
 
