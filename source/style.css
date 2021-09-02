@@ -2,31 +2,57 @@
   text-align: center;
 }
 
-.timer{
-  align-items: center; /* For vertical centering text */
-  background-color: #990000;
-  color: #ffffff;
-  display: flex; /* For vertical centering text */
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20pt;
-  height: 52px;
-  justify-content: center; /* For vertical centering text */
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1em;
-  width: 65%;
+/* When you change the --timer-diameter, change the "r" value in the circle HTML tag. It should be half the --timer-diameter, minus half the stroke-width. */
+
+:root {
+  --timer-diameter: 50px; /* Adjust this to change the timer radius*/
+  --timer-font: 16px; /* Adjust this to change the size of timer number */
+  --stroke: 140;
+}
+
+@keyframes circletimer {
+  100% {
+    stroke-dashoffset: var(--stroke);
+    stroke-dasharray: var(--stroke);
+  }
+}
+
+.timer-container {
+  text-align: center;
+}
+
+svg.timer-shell {
+  background-color: transparent;
+  transform: rotateZ(-90deg);
+  width: var(--timer-diameter);
+  height: var(--timer-diameter);
+}
+svg.timer-shell .timer-circle {
+  stroke: #047cc2;
+  stroke-width: 6;
+  fill: transparent;
+  stroke-dashoffset: 0;
+  stroke-dasharray: var(--stroke);
+}
+
+/* .countdown {
+  animation: 2s circletimer linear forwards;
+} */
+
+.timer {
+  display: block;
+  color: #000000;
+  font-size: var(--timer-font);
+  margin-top: calc(var(--timer-diameter) * -0.5 - var(--timer-font)/3*2);
 }
 
 table.choice-table{
   border-collapse: collapse;
   margin: auto;
+  margin-top: calc(var(--timer-diameter) * 0.5 + 8px); /* This is so everything else is properly moved down below the timer */
   margin-bottom: 1px;
   table-layout: fixed;
   width: 99%;
-}
-
-table.choice-table table {
-  margin: auto;
 }
 
 tr.top-row {
@@ -40,6 +66,10 @@ td.main-cell {
   padding: 5px 0 5px 0;
   text-align: center;
   vertical-align: top;
+}
+
+td.main-cell > table {
+  width: 100%;
 }
 
 td.tapped {

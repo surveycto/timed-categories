@@ -18,7 +18,11 @@ var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
 
-var timerContainer = document.querySelector('#timer')
+var timerContainer = document.querySelector('.timer-container')
+var timeNumberContainer = timerContainer.querySelector('.timer')
+
+var timerCircle = document.querySelector('.timer-circle')
+
 var keyContainers = document.querySelectorAll('#key') // {Array<Element>} Where the key to press will be displayed
 var clickAreas = document.querySelectorAll('.main-cell') // {Array<Element>} Clickable areas
 var choiceLabelContainers = document.querySelectorAll('.choice-label') // {Array<Element>} Used later to unEntity
@@ -113,6 +117,7 @@ if (!complete && (allowkeys !== 0)) { // Set up keyboard event listener if allow
 }
 
 if (timeStart != null) {
+  timerCircle.style.animation = String(timeStart / 1000) + 's' + ' circletimer linear forwards'
   setInterval(timer, 1)
 }
 
@@ -134,7 +139,7 @@ function timer () {
     }
     goToNextField()
   }
-  timerContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
+  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
 }
 
 /**
@@ -187,7 +192,7 @@ function setUnit () {
 /**
  * Takes HTML entities for < and >, and replaces them with the actual characters so HTML styling can be taken from field references
  * @param {string} str String that should be unentitied
- * @returns 
+ * @returns {string}
  */
 function unEntity (str) {
   return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
