@@ -76,3 +76,17 @@ td.main-cell > table {
 td.tapped {
   background-color: #CDE5F3;
 }
+
+td.right {
+  background-color: #c1f7c1;
+  color: #0d9c00;
+}
+
+td.wrong {
+  background-color: #f7c1c1;
+  color: #9c0000;
+}
+
+div.correct-symbol {
+  font-size: 52px;
+}
