@@ -18,6 +18,11 @@ var allowchange = getPluginParameter('allowchange')
 var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
+var correctVal = getPluginParameter('correct')
+
+if (typeof correctVal === 'string') { // Make lowercase to match more common choice values
+  correctVal = correctVal.toLocaleLowerCase()
+}
 
 var timerContainer = document.querySelector('.timer-container')
 var timeNumberContainer = timerContainer.querySelector('.timer')
@@ -158,7 +163,21 @@ function choiceSelected (choiceValue) { // When a box is clicked or a key is pre
   var selectedCol = allowedKeys.indexOf(choiceValue)
   if (selectedCol !== -1) {
     var highlightElement = tdObj[choiceValue] // Find element to highlight
-    highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
+    if (correctVal == null) { // There is no "correct" answer
+      highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
+    } else { // Will show if selection was correct
+      var checkElement = document.createElement('div')
+      checkElement.classList.add('correct-symbol')
+      if (correctVal === choiceValue) {
+        highlightElement.classList.add('right')
+        checkElement.appendChild(document.createTextNode(String.fromCharCode('10003')))
+      } else {
+        highlightElement.classList.add('wrong')
+        checkElement.appendChild(document.createTextNode(String.fromCharCode('10007')))
+      }
+      highlightElement.appendChild(checkElement)
+    }
+
     setAnswer(choiceValue)
     complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
     setTimeout( // Use timeout to see what was selected before moving on
