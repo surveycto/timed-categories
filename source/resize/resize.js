@@ -18,6 +18,7 @@ if (frameAdjust == null) {
 }
 
 var changingElement = document.querySelector('.choice-table')
+var changeTbody = changingElement.querySelector('tbody')
 
 var platform
 if (document.body.className.indexOf('web-collect') >= 0) {
@@ -28,6 +29,10 @@ if (document.body.className.indexOf('web-collect') >= 0) {
 
 if (platform === 'web') {
   parent.onresize = adjustWindow
+
+  var panelBody = parentDoc.querySelector('.panel-body')
+
+  // document.querySelector('.panel-body').getBoundingClientRect().top
   try {
     var iframe = parent.document.querySelector('iframe')
     changingElement.onscroll = function () {
@@ -49,7 +54,7 @@ function adjustWindow () {
   var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
 
   if (platform === 'web') {
-    usedHeight = 445 // This is an estimation for web collect
+    usedHeight = panelBody.getBoundingClientRect().top + changeTbody.getBoundingClientRect().top // This is an estimation for web collect
     windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
     usedHeight = 200 // This is an estimation for mobile devices
