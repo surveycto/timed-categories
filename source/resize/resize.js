@@ -18,8 +18,6 @@ if (frameAdjust == null) {
 }
 
 var changingElement = document.querySelector('.choice-table')
-var changeTbody = changingElement.querySelector('tbody')
-
 var platform
 if (document.body.className.indexOf('web-collect') >= 0) {
   platform = 'web'
@@ -55,13 +53,14 @@ function adjustWindow () {
   var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
 
   if (platform === 'web') {
-    usedHeight = panelBody.getBoundingClientRect().top + changeTbody.getBoundingClientRect().top // This is an estimation for web collect
+    usedHeight = panelBody.getBoundingClientRect().top // How much of the screen is used until it gets to the actual field
+    usedHeight += 130 // Used by the bottom of the screen
     windowHeight = parent.outerHeight // Height of the document of the web page.
   } else {
     usedHeight = 200 // This is an estimation for mobile devices
     windowHeight = window.screen.height // Height of the device.
   }
-  var shiftPos = changingElement.getBoundingClientRect().top
+  var shiftPos = changingElement.getBoundingClientRect().top // How much is used by the field until getting to the element that will change in size
   var containerHeight = Math.floor(windowHeight - shiftPos - usedHeight + frameAdjust) // What the height of the scrolling container should be
 
   changingElement.style.height = String(containerHeight) + 'px'
