@@ -140,7 +140,7 @@ function timer () {
     }
     goToNextField()
   }
-  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
+  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) // Set time display
 }
 
 /**
