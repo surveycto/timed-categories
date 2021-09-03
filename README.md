@@ -24,8 +24,11 @@ Great for implicit association tests (IAT)!
 * Can select a choice using either the corresponding keyboard key, or area below the choice (either can be turned off).
 * Display the keyboard key corresponding with each choice (can be turned off).
 * Choice is given a "pass" value if a choice is not selected in time.
+* Show if selected choice is correct choice (optional)
 * If the respondent selects a choice they didn't mean to, and there was time remaining, they can go back and correct it (this can be turned off).
-* Support images for both the field and choices. 
+* Support images for both the field and choices.
+
+To learn how to customize the field plug-in, check out the [parameters](#parameters) below.
 
 ### Data format
 
@@ -40,50 +43,42 @@ The field will have a value of the selected choice, or of the "pass" choice (dis
 **To use with the sample form:**
 
 1. Download the [sample form](https://github.com/surveycto/timed-categories/raw/master/extras/sample-form/Sample%20form%20-%20Delete%20Twilio%20recording.xlsx) from this repo.
+1. Download the [crops_list.csv](https://github.com/surveycto/twilio-call/raw/master/extras/sample-form/twilio_access.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the file name, and save).
 1. Download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/master/timed-categories.fieldplugin.zip) file from this repo.
-1. Download the [twilio-call.fieldplugin.zip](https://github.com/surveycto/twilio-call/blob/master/twilio-call.fieldplugin.zip?raw=true) file from the [twilio-call](https://github.com/surveycto/twilio-call/blob/master/README.md) repo.
-1. Download the [twilio_access.csv](https://github.com/surveycto/twilio-call/raw/master/extras/sample-form/twilio_access.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the file name, and save).
-1. Update and save the twilio_access.csv file with information about your own Twilio account.
-1. Upload the sample form to your server with both field plug-ins and the CSV file attached.
-1. Adjust the parameters as you see fit.
-
+1. Upload the form to your server with the CSV and ZIP files attached.
 
 #### Setting up the choice list
 
-All choices in the choice list, except for the last choice, will be choices the respondent can select. Each of those will have a column in the field display.
+All choices in the choice list, except for the last choice, will be choices the respondent can select. Each of those will have a column in the field display, and they will be selectable by the respondent.
 
-The last choice will be what is selected if time runs out before a choice is selected. This will be hidden from the field. This is needed even if the field is not timed.
+The last choice will be automatically selected if time runs out before a choice is selected. This will be hidden in the field. This is needed even if the field is not timed.
 
 ### Parameters
 
-| Name | Description |
-|:---|:---|
-|`action` (required)|What happens when a choice is selected. See [Actions](#actions) below for a list of values you can use.|
-|`call_url` (required)|The URL to access the call information. In both this field plug-in's sample form, as well as the twilio-call field plug-in, this is stored in the field called "twilio_call_url"|
-|`auth_token` (required)|The authorization token for your Twilio account. (Note: The account SID is not needed, because this is extracted from the `call_url` value.)|
-|`timeout` (optional)|How long to wait with no response from Twilio until the enumerator can move on. See [Timeout](#Timeout) below for more information. Takes value in number of seconds.|`8`|
-|`waiting_text` (optional)|Message displayed after the consent choice has been confirmed by the enumerator, but a response has not yet been received by the Twilio server.|`'Enumerator: Please wait...'`|
-|`complete_text` (optional)|Message displayed when the enumerator can move on to the next field. This means either the action has been completed and a response has been received by the server, or it has timed out.|`'All set! You can now move to the next field.'`|
-|`yes` (optional)|Text to display for the "Yes" confirmation button after a choice has been selected.|`'Yes'`|
-|`no` (optional)|Text to display for the "No" confirmation button after a choice has been selected.|`'No'`|
+All parameters are **optional**, but they can be used to customize the field plug-in.
 
-#### Actions
+#### Main parameters
 
-These are the values you can give to the `action` parameter. In this table, 'Value' is the value you give to the `action` parameter, and 'Trigger' is the selected choice value that triggers the action. For example, if the `action` parameter has a value of 'delete', then nothing will happen if the choice selected has a value of `1` (when consent is granted), only if the choice selected has a value of `0` (when consent for recording is withheld).
+These are by far the most common parameters you will use.
 
-|Value|Trigger|Description|
+|Name|Description|Default|
 |:---|:---|:---|
-|`'delete'`|`0`|Deletes the recording. If consent is denied, then the recording is stopped, and then deleted.|
-|`'stop'`|`0`|Stops the recording only. If consent is denied, then the recording is stopped, but not deleted. That way, you have a recording of the respondent denying consent.|
-|`'start'`|`1`|Starts a recording for the active call. If consent is approved, then the call recording starts. Also, the second part of the metadata will store the URL in the call recording information (see [Metadata](#Metadata) above for more information).|
+|`duration`|<p>How long the respondent has to answer the field until it automatically moves on to the next page. No matter the value of `unit`, this should always be defined in **seconds**.</p><p>If this is undefined, then the field will be untimed, and the timer will not appear.</p>|None|
+|`unit`|<p>Unit to be used for the display time. For example, if `duration` has a value of 5, and `unit` has a value of `'cs'` for "centiseconds", then the time will start at 500, and count down to 0 over five seconds (500 centiseconds)</p><p>You can use `'s'` (seconds), `'ds'` (deciseconds), `'cs'` (centiseconds), or `'ms'` (milliseconds).</p>|`'s'`|
+|`correct`|<p>If a field has a "correct" value, you can define that in this parameter. If the respondent selects the correct answer, then the selected choice will turn green, and show a checkmark. If they select the wrong answer, the selected choice will turn red, and show an X. That way, the respondent gets instant feedback.</p><p>The value of this parameter should be the same as the correct choice value, but in quotes. For example, if the correct choice has a value of `e`, then this parameter should have a value of `'e'`. If the choice with a value of `e` is selected, then the selected choice will turn green; otherwise, it will turn red.</p><p>This parameter is optional, so even if a field has a "correct" value, id you don't want to give immediate feedback, you can simply leave this parameter out. If this parameter is not defined, then the selected choice will turn blue, whether or not it is right.</p>|None|
 
-In the sample form, the field "action" on row 26 asks which action should be taken, and this is used for the `action` parameter of the field plug-in. For actual data collection, this will be explicitly stated, like this: `action='deleted'`
+#### Other parameters
 
-#### Timeout
+These are other parameters you can use in your form, but they are a lot less common.
 
-In this field plug-in, the enumerator cannot move on from the field until it has been confirmed that the action is complete (e.g. the recording has been deleted, the recording has been stopped, etc). While this should just take a second or two, in places with slower internet connections, this can take longer. By default, if there is no response within `8` seconds, then the field plug-in will allow the enumerator to move forward. This does not mean the action failed, just that the enumerator should just move on and complete the form so they don't keep the respondent waiting.
-
-If 8 seconds is too long or too short, you can use the `timeout` parameter to adjust it. For example, `timeout=5` shortens the timeout time to 5 seconds.
+|Name|Description|Default|
+|:---|:---|:---|
+|`hidekeys`|Normally, the keyboard key used to select a choice will appear below the choice label. If this parameter has a value of `1`, then it will not show those keyboard keys. This can be helpful if the form will only be completed on a mobile device, where the correct choice will only be selected with clicking/tapping.|`0`|
+|`continue`|<p>Whether or not the respondent can continue with the time they have left. For example, if the field has a `duration` of 10, and the respondent goes to the field, stays for two seconds, goes back to the previous field for five seconds, then returns to the timed-categories field, they will still have three seconds to answer the field.</p><p>If this parameter has a value of `0`, then if the respondent accidentally swipes backwards while on the field, then the field will automatically be assigned the "Pass" value.</p>|`1`|
+|`allowchange`|Related to `continue`, if the respondent answers a field, but they **still have time remaining**, then they can go back and change their answer. This can be helpful if the respondent is tapping the screen too much, accidentally answering a question before they actually get a chance to read it.|`1`|
+|`allowkeys`|Whether or not keyboard keys can be used to select a choice. If this parameter has a value of `0`, then keyboard keys cannot be used to select a choice, only clicking/tapping.|`1`|
+|`allowclick`|Whether or not clicking/tapping a choice on the screen can be used to select a choice. If this parameter has a value of `0`, then clicking/tapping the choice cannot be used to select a choice, only keyboard keys.|`1`|
+|`frame_adjust` (advanced)|The field plug-in has been formatted so the tappable area takes up as much of the screen as possible, but without making it so big that the page becomes scrollable. If you would like to make the clickable area bigger or smaller, use this parameter to define how many pixels it should be adjusted by. For example, to make the clickable area 50 pixels longer, give this parameter a value of `50`. To make the clickable area 10 pixels shorter, give this parameter a value of `-10`.|`0`|
 
 ### Default SurveyCTO feature support
 
@@ -100,7 +95,7 @@ If 8 seconds is too long or too short, you can use the `timeout` parameter to ad
 | `label` appearance | No |
 | `list-nolabel` appearance | No |
 | `quick` appearance | No |
-| `minimal` appearance | Yes |
+| `minimal` appearance | No |
 | `compact` appearance | No |
 | `compact-#` appearance | No |
 | `quickcompact` appearance | No |
@@ -112,7 +107,7 @@ If 8 seconds is too long or too short, you can use the `timeout` parameter to ad
 ## More resources
 
 * **Sample form**  
-You can find a form definition in this repo here: [extras/sample-form](extras/sample-form). You will also need the [twilio-call](https://github.com/surveycto/twilio-call/blob/master/README.md) field plug-in, as well as its [twilio_access.csv file](https://github.com/surveycto/twilio-call/blob/master/extras/sample-form/twilio_access.csv), which you can learn more about in its documentation.
+You can find a form definition in this repo [here](extras/sample-form/simple/Timed%20categories%20sample%20form). You will also need the [crops_list.csv file](extras/sample-form/simple/crops_list.csv).
 
 * **Developer documentation**  
 More instructions for developing and using field plug-ins can be found here: [https://github.com/surveycto/Field-plug-in-resources](https://github.com/surveycto/Field-plug-in-resources)
