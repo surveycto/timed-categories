@@ -29,12 +29,13 @@ if (document.body.className.indexOf('web-collect') >= 0) {
 
 if (platform === 'web') {
   parent.onresize = adjustWindow
+  var parentDoc = parent.document
 
   var panelBody = parentDoc.querySelector('.panel-body')
 
   // document.querySelector('.panel-body').getBoundingClientRect().top
   try {
-    var iframe = parent.document.querySelector('iframe')
+    var iframe = parentDoc.querySelector('iframe')
     changingElement.onscroll = function () {
       iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the iframe becomes way to long, so this makes it smaller again
     }
