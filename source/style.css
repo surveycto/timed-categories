@@ -10,6 +10,7 @@
   --stroke: 140;
 }
 
+/* Animation for the shrinking timer */
 @keyframes circletimer {
   100% {
     stroke-dashoffset: var(--stroke);
@@ -21,12 +22,15 @@
   text-align: center;
 }
 
+/* Holds the timer circle */
 svg.timer-shell {
   background-color: transparent;
   height: var(--timer-diameter);
   transform: rotateZ(-90deg);
   width: var(--timer-diameter);
 }
+
+/* Timer circle */
 svg.timer-shell .timer-circle {
   fill: transparent;
   stroke: #047cc2;
@@ -35,16 +39,14 @@ svg.timer-shell .timer-circle {
   stroke-width: 6;
 }
 
-/* .countdown {
-  animation: 2s circletimer linear forwards;
-} */
-
+/* Timer number */
 .timer {
   color: #000000;
   display: block;
   font-size: var(--timer-font);
   margin-top: calc(var(--timer-diameter) * -0.5 - var(--timer-font)/3*2 - 1px);
 }
+
 
 table.choice-table{
   border-collapse: collapse;
@@ -55,15 +57,14 @@ table.choice-table{
   width: 99%;
 }
 
-tr.top-row {
-  border-bottom: solid black 1px; /* This needs to go after border-style */
-  border-style: hidden;
+tr.main-row {
+  border-style: hidden; /* Hide the outside border, so there are only separator lines */
 }
 
 td.main-cell {
-  background-color: #e8e8e8;
-  border: solid black 1px;
-  border-radius: 10px;
+  background-color: #e8e8e8; /* Makes background gray so can see selectable area */
+  border: solid black 1px; /* Line(s) separating the columns */
+  border-radius: 10px; /* Round the background coloring */
   padding: 5px 0 5px 0;
   text-align: center;
   vertical-align: top;
@@ -73,20 +74,24 @@ td.main-cell > table {
   width: 100%;
 }
 
+/* Style when a choice is selected, and there is no "correct" answer */
 td.tapped {
   background-color: #CDE5F3;
 }
 
+/* Style when a choice is selected, and it is correct */
 td.right {
   background-color: #c1f7c1;
   color: #0d9c00;
 }
 
+/* Style when a choice is selected, and is is incorrect */
 td.wrong {
   background-color: #f7c1c1;
   color: #9c0000;
 }
 
+/* Font size of the correct/incorrect symbol */
 div.correct-symbol {
   font-size: 52px;
 }
