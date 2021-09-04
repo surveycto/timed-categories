@@ -80,7 +80,7 @@ td.tapped {
 }
 
 /* Style when a choice is selected, and it is correct */
-td.right {
+td.correct {
   background-color: #c1f7c1;
   color: #0d9c00;
 }
