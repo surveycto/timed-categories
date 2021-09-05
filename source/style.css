@@ -7,7 +7,8 @@
 :root {
   --timer-diameter: 50px; /* Adjust this to change the timer radius*/
   --timer-font: 16px; /* Adjust this to change the size of timer number */
-  --stroke: 140;
+  --stroke-width: 6px;
+  --stroke: calc((var(--timer-diameter) - var(--stroke-width)) * 3.141592654);
 }
 
 /* Animation for the shrinking timer */
@@ -36,7 +37,7 @@ svg.timer-shell .timer-circle {
   stroke: #047cc2;
   stroke-dashoffset: 0;
   stroke-dasharray: var(--stroke);
-  stroke-width: 6px;
+  stroke-width: var(--stroke-width);
 }
 
 /* Timer number */
