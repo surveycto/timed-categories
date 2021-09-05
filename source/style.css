@@ -6,7 +6,7 @@
 
 :root {
   --timer-diameter: 50px; /* Adjust this to change the timer radius*/
-  --timer-font: 26px; /* Adjust this to change the size of timer number */
+  --timer-font: 20px; /* Adjust this to change the size of timer number */
   --stroke-width: 6px;
   --stroke: calc((var(--timer-diameter) - var(--stroke-width)) * 3.141592654);
 }
@@ -50,12 +50,10 @@ svg.timer-shell .timer-circle {
   right: 0;
 }
 
-
 table.choice-table{
   border-collapse: collapse;
   margin: auto;
-  margin-bottom: 1px;
-  margin-top: calc(var(--timer-diameter) * 0.5 + 8px); /* This is so everything else is properly moved down below the timer */
+  margin-top: 1em;
   table-layout: fixed;
   width: 99%;
 }
