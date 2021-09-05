@@ -6,7 +6,7 @@
 
 :root {
   --timer-diameter: 50px; /* Adjust this to change the timer radius*/
-  --timer-font: 16px; /* Adjust this to change the size of timer number */
+  --timer-font: 26px; /* Adjust this to change the size of timer number */
   --stroke-width: 6px;
   --stroke: calc((var(--timer-diameter) - var(--stroke-width)) * 3.141592654);
 }
