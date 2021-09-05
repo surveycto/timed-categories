@@ -174,7 +174,7 @@ function choiceSelected (choiceValue) { // When a box is clicked or a key is pre
       var checkElement = document.createElement('div')
       checkElement.classList.add('correct-symbol')
       if (correctVal === choiceValue) {
-        highlightElement.classList.add('right')
+        highlightElement.classList.add('correct')
         checkElement.appendChild(document.createTextNode(String.fromCharCode('10003')))
       } else {
         selectedCorrect = 0
