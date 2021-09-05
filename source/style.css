@@ -43,9 +43,11 @@ svg.timer-shell .timer-circle {
 /* Timer number */
 .timer {
   color: #000000;
-  display: block;
   font-size: var(--timer-font);
-  margin-top: calc(var(--timer-diameter) * -0.5 - var(--timer-font)/3*2 - 1px);
+  margin-top: calc((var(--timer-font) - (var(--timer-diameter)*0.8 + 3px)) * -0.58);
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 
