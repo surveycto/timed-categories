@@ -1,10 +1,10 @@
 # Timed categories
 
-<img src="extras/readme-images/all-set.png" alt="All set" title="All set" width="300px"/>
+<img src="extras/readme-images/timer.png" width="300px"/>
 
-| Not complete | Confirmation | Working |
-| --- | --- | --- |
-| <img src="extras/readme-images/not-complete.png" alt="Not complete" title="Not complete" width="150px"/> | <img src="extras/readme-images/confirmation.png" alt="Confirmation" title="Confirmation" width="150px"/> | <img src="extras/readme-images/working.png" alt="Working" title="Working" width="150px"/> |
+| No timer | Choice images | Hide keys | Randomized |
+|:---:|:---:|:---:|:---:|
+| <img src="extras/readme-images/no-timer.png" width="100px"/> | <img src="extras/readme-images/choice-images.png"  width="100px"/> | <img src="extras/readme-images/hide-keys.png" width="100px"/> | <img src="extras/readme-images/randomized.png" width="100px"/> |
 
 ## Description
 
@@ -12,7 +12,7 @@ This field plug-in presents a number of choices as columns, and the respondent c
 
 Great for implicit association tests (IAT)!
 
-[![](extras/readme-images/beta-release-download.jpg)](https://github.com/surveycto/timed-categories/raw/master/timed-categories.fieldplugin.zip)
+[![](extras/readme-images/beta-release-download.jpeg)](https://github.com/surveycto/timed-categories/raw/master/timed-categories.fieldplugin.zip)
 
 *This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com.*
 
@@ -85,11 +85,13 @@ These are other parameters you can use in your form, but they are a lot less com
 |Name|Description|Default|
 |:---|:---|:---|
 |`hidekeys`|Normally, the keyboard key used to select a choice will appear below the choice label. If this parameter has a value of `1`, then it will not show those keyboard keys. This can be helpful if the form will only be completed on a mobile device, where the correct choice will only be selected by clicking/tapping.|`0`|
-|`allowkeys`|Whether or not keyboard keys can be used to select a choice. If this parameter has a value of `0`, then keyboard keys cannot be used to select a choice, only clicking/tapping.|`1`|
+|`allowkeys`|Whether or not keyboard keys can be used to select a choice. If this parameter has a value of `0`, then keyboard keys cannot be used to select a choice, only clicking/tapping. It will also hide the keyboard keys usually shown below the choice labels, since they are not needed.|`1`|
 |`allowclick`|Whether or not clicking/tapping a choice on the choice column can be used to select a choice. If this parameter has a value of `0`, then clicking/tapping the choice cannot be used to select a choice, only keyboard keys.|`1`|
 |`continue`|<p>Whether or not the respondent can continue with the time they have left. For example, if the field has a `duration` of 10, and the respondent goes to the field, stays for two seconds, goes back to the previous field for five seconds, then returns to the timed-categories field, they will still have three seconds to answer the field.</p><p>If this parameter has a value of `0`, then if the respondent accidentally swipes backwards while on the field, then the field will automatically be assigned the "Pass" value.</p><p>This parameter has no effect if the `duration` is not set.</p>|`1`|
 |`allowchange`|<p>Related to `continue`, if the respondent answers a field, but they **still have time remaining**, then they can go back and change their answer. This can be helpful if the respondent is tapping the screen too much, accidentally answering a question before they actually get a chance to read it.</p><p>This parameter has no effect if the `duration` is not set.</p>|`1`|
 |`frame_adjust` (advanced)|The field plug-in has been formatted so the tappable area takes up as much of the screen as possible, but without making it so big that the page becomes scrollable. If you would like to make the clickable area bigger or smaller, use this parameter to define how many pixels it should be adjusted by. For example, to make the clickable area 50 pixels taller, give this parameter a value of `50`. To make the clickable area 10 pixels shorter, give this parameter a value of `-10`.|`0`|
+
+For a demonstration of the parameters, deploy [this sample form](), with [this file]() and the field plug-in attached,
 
 ### More tips
 
