@@ -2,9 +2,13 @@
 
 <img src="extras/readme-images/timer.png" width="300px"/>
 
-| No timer | Choice images | Hide keys | Randomized |
-|:---:|:---:|:---:|:---:|
 | <img src="extras/readme-images/no-timer.png" width="100px"/> | <img src="extras/readme-images/choice-images.png"  width="100px"/> | <img src="extras/readme-images/hide-keys.png" width="100px"/> | <img src="extras/readme-images/randomized.png" width="100px"/> |
+|:---:|:---:|:---:|:---:|
+| No timer | Choice images | Hide keys | Randomized |
+
+| <img src="extras/readme-images/web-mobile.png" width="100px"/> | <img src="extras/readme-images/web-desktop.png"  width="20%"/> |
+|:---:|:---:|
+| No timer | Choice images |
 
 ## Description
 
