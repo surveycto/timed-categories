@@ -6,6 +6,10 @@
 |:---:|:---:|:---:|:---:|
 | No timer | Choice images | Hide keys | Randomized |
 
+| <img src="extras/readme-images/right-selected.png" width="100px" /> | <img src="extras/readme-images/wrong-selected.png" width="100px"/> |
+|:---:|:---:|
+| Right selected | Wrong selected |
+
 | <img src="extras/readme-images/web-mobile.png" width="100px"/> | <img src="extras/readme-images/web-desktop.png"  width="210px"/> |
 |:---:|:---:|
 | No timer | Choice images |
