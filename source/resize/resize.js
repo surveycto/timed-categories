@@ -18,7 +18,6 @@ if (frameAdjust == null) {
 }
 
 var changingElement = document.querySelector('.choice-table')
-
 var platform
 if (document.body.className.indexOf('web-collect') >= 0) {
   platform = 'web'
@@ -28,8 +27,13 @@ if (document.body.className.indexOf('web-collect') >= 0) {
 
 if (platform === 'web') {
   parent.onresize = adjustWindow
+  var parentDoc = parent.document
+
+  var panelBody = parentDoc.querySelector('.panel-body') // The box with the actual field, within which is the field plug-in
+  var iframe = parentDoc.querySelector('iframe') // Contains the field plug-in
+
+  // document.querySelector('.panel-body').getBoundingClientRect().top
   try {
-    var iframe = parent.document.querySelector('iframe')
     changingElement.onscroll = function () {
       iframe.offsetHeight = 100 // Fixes an issue where during certain scroll events, the iframe becomes way to long, so this makes it smaller again
     }
@@ -49,13 +53,15 @@ function adjustWindow () {
   var windowHeight // Height of the working area. In web forms, it's the height of the window, otherwise, it's the height of the device.
 
   if (platform === 'web') {
-    usedHeight = 445 // This is an estimation for web collect
-    windowHeight = parent.outerHeight // Height of the document of the web page.
+    windowHeight = parent.innerHeight // Height of the document of the web page.
+    usedHeight = panelBody.getBoundingClientRect().top // How much of the screen is used until it gets to the actual field
+    usedHeight += 149 // Used by the bottom of the screen
   } else {
     usedHeight = 200 // This is an estimation for mobile devices
     windowHeight = window.screen.height // Height of the device.
   }
-  var shiftPos = changingElement.getBoundingClientRect().top
+  var shiftPos = changingElement.getBoundingClientRect().top // How much is used by the field until getting to the element that will change in size
+
   var containerHeight = Math.floor(windowHeight - shiftPos - usedHeight + frameAdjust) // What the height of the scrolling container should be
 
   changingElement.style.height = String(containerHeight) + 'px'

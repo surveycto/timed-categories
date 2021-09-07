@@ -11,14 +11,25 @@ var timeLeft // {number} How much time is left on the timer
 var metadata = getMetaData()
 var timeUnit // {string} Time unit to be displayed
 var timeDivider // {number} Based on the timeUnit, what the ms time will be divided by for display to the user
+var selectedCorrect = 0 // This starts with a value of 0, but if the correct answer is selected, it is assigned a value of 1, and added to the metadata
 
+var durationStart = getPluginParameter('duration')
 var allowContinue = getPluginParameter('continue')
 var allowchange = getPluginParameter('allowchange')
 var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
+var correctVal = getPluginParameter('correct')
 
-var timerContainer = document.querySelector('#timer')
+if (typeof correctVal === 'string') { // Make lowercase to match more common choice values
+  correctVal = correctVal.toLocaleLowerCase()
+}
+
+var timerContainer = document.querySelector('.timer-container')
+var timeNumberContainer = timerContainer.querySelector('.timer')
+
+var timerCircle = document.querySelector('.timer-circle')
+
 var keyContainers = document.querySelectorAll('#key') // {Array<Element>} Where the key to press will be displayed
 var clickAreas = document.querySelectorAll('.main-cell') // {Array<Element>} Clickable areas
 var choiceLabelContainers = document.querySelectorAll('.choice-label') // {Array<Element>} Used later to unEntity
@@ -67,34 +78,31 @@ for (let c = 0; c < numChoices - 1; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (metadata == null) { // If empty, then this is the first time the field was opened. By far the most common situation.
-  timeStart = getPluginParameter('duration') // Time limit on each field in seconds
-  if (timeStart == null) { // Hide timer if no time given
-    timerContainer.style.display = 'none'
-    setMetaData('1') // Set metadata to indicate field has already been opened, instead of storing the current time
-  } else { // There is a timer, so set it up
-    setUnit()
-    timeStart *= 1000 // Converts to ms
-  }
-} else if (allowContinue && (!complete || allowchange)) { // The field was previously opened, but parameters say allowed to continue
-  complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.
-  if (getPluginParameter('duration') == null) {
-    timerContainer.style.display = 'none'
-  } else { // Get time from last time, calculate how much time has passed, and set the current time based on how much time has passed
-    setUnit()
+if (durationStart == null) {
+  // Does nothing for now
+} else {
+  timerContainer.style.display = ''
+  setUnit()
+  if (metadata == null) {
+    timeStart = durationStart * 1000 // Converts to ms
+  } else if (allowContinue && (!complete || allowchange)) {
+    complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
-    [timeStart, lastLeft] = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
-    timeStart = parseInt(timeStart)
-    lastLeft = parseInt(lastLeft)
+    var sepMetadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
+    if (sepMetadata.length > 2) {
+      selectedCorrect = sepMetadata[2]
+    }
+    timeStart = parseInt(sepMetadata[0])
+    lastLeft = parseInt(sepMetadata[1])
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
+  } else { // The field was previously opened, but not allowed to continue, so setting timeLeft to -1 so it will automatically skip ahead
+    if (!complete) {
+      setAnswer(missedValue)
+      complete = true
+    }
+    timeLeft = -1
   }
-} else { // The field was previously opened, but not allowed to continue, so will set timeLeft to -1 so it will automatically skip ahead
-  if (!complete) {
-    setAnswer(missedValue)
-    complete = true
-  }
-  timeLeft = -1
 }
 
 if (!complete && (allowclick !== 0)) { // Set up click/tap on region
@@ -112,7 +120,9 @@ if (!complete && (allowkeys !== 0)) { // Set up keyboard event listener if allow
   document.addEventListener('keyup', keypress)
 }
 
-if (timeStart != null) {
+if (durationStart != null) {
+  timerCircle.style.animation = String(durationStart) + 's' + ' circletimer linear forwards'
+  timerCircle.style.animationDelay = '-' + String(Math.ceil(durationStart - (timeStart / 1000))) + 's' // Delay in case returning to field
   setInterval(timer, 1)
 }
 
@@ -123,7 +133,7 @@ function timer () {
   if (!complete) {
     var timeNow = Date.now()
     timeLeft = startTime + timeStart - timeNow
-    setMetaData(String(timeLeft) + ' ' + String(timeNow)) // Save the time, so if the respondent leaves and comes back, can remove the time passed so far, as well as the time passed while they were gone
+    setMetaData(String(timeLeft) + ' ' + String(timeNow) + (correctVal == null ? '' : ' ' + String(selectedCorrect))) // Save the time, so if the respondent leaves and comes back, can remove the time passed so far, as well as the time passed while they were gone. If there is a correct value, then add if the selected value is correct or not.
   }
 
   if (timeLeft < 0) { // Stop the timer when time runs out. Using <0 instead of <=0 so does not keep setting the answer and going to the next field, and will only do it once.
@@ -134,7 +144,7 @@ function timer () {
     }
     goToNextField()
   }
-  timerContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
+  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) // Set time display
 }
 
 /**
@@ -157,7 +167,23 @@ function choiceSelected (choiceValue) { // When a box is clicked or a key is pre
   var selectedCol = allowedKeys.indexOf(choiceValue)
   if (selectedCol !== -1) {
     var highlightElement = tdObj[choiceValue] // Find element to highlight
-    highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
+    if (correctVal == null) { // There is no "correct" answer
+      highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
+    } else { // Will show if selection was correct
+      selectedCorrect = 1
+      var checkElement = document.createElement('div')
+      checkElement.classList.add('correct-symbol')
+      if (correctVal === choiceValue) {
+        highlightElement.classList.add('correct')
+        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
+      } else {
+        selectedCorrect = 0
+        highlightElement.classList.add('wrong')
+        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
+      }
+      highlightElement.appendChild(checkElement)
+    }
+
     setAnswer(choiceValue)
     complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
     setTimeout( // Use timeout to see what was selected before moving on
@@ -187,7 +213,7 @@ function setUnit () {
 /**
  * Takes HTML entities for < and >, and replaces them with the actual characters so HTML styling can be taken from field references
  * @param {string} str String that should be unentitied
- * @returns 
+ * @returns {string}
  */
 function unEntity (str) {
   return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>')

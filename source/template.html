@@ -19,10 +19,16 @@
 {{/MEDIAVIDEO}}
 
 <div class="hint default-hint-text-size" id="hint">{{{HINT}}}</div>
-<div class="timer default-question-text-size" id="timer"></div>
+
+<div class="timer-container" style="display:none">
+  <svg class="timer-shell">
+    <circle class="timer-circle" cx="50%" cy="50%" r="22px" />
+  </svg>
+  <span class="timer"></span>
+</div>
 
 <table class="choice-table">
-  <tr class="main-row top-row">
+  <tr class="main-row">
     {{#CHOICES}}
     <td class="choice-disp main-cell" id="choice-{{CHOICE_VALUE}}">
       <table>
