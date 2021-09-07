@@ -58,6 +58,8 @@ You can also calculate if the response is correct or not by checking the field v
 1. Download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/master/timed-categories.fieldplugin.zip) file from this repo.
 1. Upload the form to your server with the CSV and ZIP files attached.
 
+You can also check out [this sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx), which demonstrates the parameters, with [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip) and the field plug-in attached.
+
 #### Setting up the choice list
 
 All choices in the choice list, except for the last choice, will be choices the respondent can select. Each of those choices will have a column in the field display, and they will be selectable by the respondent using either a keyboard key or by clicking.
@@ -95,7 +97,7 @@ These are other parameters you can use in your form, but they are a lot less com
 |`allowchange`|<p>Related to `continue`, if the respondent answers a field, but they **still have time remaining**, then they can go back and change their answer. This can be helpful if the respondent is tapping the screen too much, accidentally answering a question before they actually get a chance to read it.</p><p>This parameter has no effect if the `duration` is not set.</p>|`1`|
 |`frame_adjust` (advanced)|The field plug-in has been formatted so the tappable area takes up as much of the screen as possible, but without making it so big that the page becomes scrollable. If you would like to make the clickable area bigger or smaller, use this parameter to define how many pixels it should be adjusted by. For example, to make the clickable area 50 pixels taller, give this parameter a value of `50`. To make the clickable area 10 pixels shorter, give this parameter a value of `-10`.|`0`|
 
-For a demonstration of the parameters, deploy [this sample form](), with [this file]() and the field plug-in attached,
+For a demonstration of the parameters, deploy [this sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx), with [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip) and the field plug-in attached.
 
 ### More tips
 
@@ -130,8 +132,11 @@ For a demonstration of the parameters, deploy [this sample form](), with [this f
 
 ## More resources
 
-* **Sample form**  
-You can find a form definition in this repo [here](extras/sample-form/simple/Timed%20categories%20sample%20form). You will also need the [crops_list.csv file](extras/sample-form/simple/crops_list.csv).
+* **Sample form 1**  
+You can find the main form definition [here](extras/sample-form/simple/Timed%20categories%20sample%20form). You will also need the [crops_list.csv file](extras/sample-form/simple/crops_list.csv).
+
+* **Sample form 2**  
+You can find the other form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx). You will need to attach [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip).
 
 * **Developer documentation**  
 More instructions for developing and using field plug-ins can be found here: [https://github.com/surveycto/Field-plug-in-resources](https://github.com/surveycto/Field-plug-in-resources)
