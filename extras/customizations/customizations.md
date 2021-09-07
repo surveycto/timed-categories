@@ -2,7 +2,7 @@
 
 The timed-categories field plug-in has lots of parameters, so you can customize it to fit your needs. However, you can also change the field plug-in itself to customize its appearance. Here, we discuss some of the most common and easier changes you can make to this field plug-in.
 
-For help making customizations to the field plug-in, check out our support article on [customizing field plug-ins](). Even if you have never used CSS or HTML before, you can follow the steps described here¸ to customize the field plug-in.
+For help making customizations to the field plug-in, check out our support article on [customizing field plug-ins](). Even if you have never used CSS or HTML before, you can follow the steps described here to customize the field plug-in.
 
 We have a lot of suggestions on this page, but feel free to just focus on the adjustments you would like to use, ignoring the others.
 
@@ -95,6 +95,10 @@ If you are going to use basic characters that you can find on most keyboards, su
     checkElement.appendChild(document.createTextNode('Y'))
 
 ## Moving the timer
+
+|<img src="../readme-images/timer.png" width=25% />|<img src="timer-top.png" width=25% />|
+|:---|:---|
+|Standard|Timer top
 
 Currently, the timer is below the field label, hint, and any media you might have in the field, and above the choice columns, but if you'd like, you can move it to another part of the form.
 
