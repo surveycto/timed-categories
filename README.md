@@ -133,7 +133,7 @@ For a demonstration of the parameters, deploy [this sample form](https://github.
 ## More resources
 
 * **Sample form 1**  
-You can find the main form definition [here](extras/sample-form/simple/Timed%20categories%20sample%20form). You will also need the [crops_list.csv file](extras/sample-form/simple/crops_list.csv).
+You can find the main form definition [here](extras/sample-form/sample-main/Timed%20categories%20sample%20form). You will also need the [crops_list.csv file](extras/sample-form/sample-main/crops_list.csv).
 
 * **Sample form 2**  
 You can find the other form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx). You will need to attach [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip).
