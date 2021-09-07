@@ -11,6 +11,7 @@ var timeLeft // {number} How much time is left on the timer
 var metadata = getMetaData()
 var timeUnit // {string} Time unit to be displayed
 var timeDivider // {number} Based on the timeUnit, what the ms time will be divided by for display to the user
+var selectedCorrect = 0 // This starts with a value of 0, but if the correct answer is selected, it is assigned a value of 1, and added to the metadata
 
 var durationStart = getPluginParameter('duration')
 var allowContinue = getPluginParameter('continue')
@@ -87,9 +88,12 @@ if (durationStart == null) {
   } else if (allowContinue && (!complete || allowchange)) {
     complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
-    [timeStart, lastLeft] = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
-    timeStart = parseInt(timeStart)
-    lastLeft = parseInt(lastLeft)
+    var sepMetadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
+    if (sepMetadata.length > 2) {
+      selectedCorrect = sepMetadata[2]
+    }
+    timeStart = parseInt(sepMetadata[0])
+    lastLeft = parseInt(sepMetadata[1])
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
   } else { // The field was previously opened, but not allowed to continue, so setting timeLeft to -1 so it will automatically skip ahead
@@ -129,7 +133,7 @@ function timer () {
   if (!complete) {
     var timeNow = Date.now()
     timeLeft = startTime + timeStart - timeNow
-    setMetaData(String(timeLeft) + ' ' + String(timeNow)) // Save the time, so if the respondent leaves and comes back, can remove the time passed so far, as well as the time passed while they were gone
+    setMetaData(String(timeLeft) + ' ' + String(timeNow) + (correctVal == null ? '' : ' ' + String(selectedCorrect))) // Save the time, so if the respondent leaves and comes back, can remove the time passed so far, as well as the time passed while they were gone. If there is a correct value, then add if the selected value is correct or not.
   }
 
   if (timeLeft < 0) { // Stop the timer when time runs out. Using <0 instead of <=0 so does not keep setting the answer and going to the next field, and will only do it once.
@@ -140,7 +144,7 @@ function timer () {
     }
     goToNextField()
   }
-  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) + ' ' + timeUnit // Set time display
+  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) // Set time display
 }
 
 /**
@@ -166,14 +170,16 @@ function choiceSelected (choiceValue) { // When a box is clicked or a key is pre
     if (correctVal == null) { // There is no "correct" answer
       highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
     } else { // Will show if selection was correct
+      selectedCorrect = 1
       var checkElement = document.createElement('div')
       checkElement.classList.add('correct-symbol')
       if (correctVal === choiceValue) {
-        highlightElement.classList.add('right')
-        checkElement.appendChild(document.createTextNode(String.fromCharCode('10003')))
+        highlightElement.classList.add('correct')
+        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
       } else {
+        selectedCorrect = 0
         highlightElement.classList.add('wrong')
-        checkElement.appendChild(document.createTextNode(String.fromCharCode('10007')))
+        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
       }
       highlightElement.appendChild(checkElement)
     }
