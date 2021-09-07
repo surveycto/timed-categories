@@ -16,7 +16,7 @@ This field plug-in presents a number of choices as columns, and the respondent c
 
 Great for implicit association tests (IAT)!
 
-[![](extras/readme-images/beta-release-download.jpeg)](https://github.com/surveycto/timed-categories/raw/master/timed-categories.fieldplugin.zip)
+[![](extras/readme-images/beta-release-download.jpeg)](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip)
 
 *This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com.*
 
@@ -49,13 +49,13 @@ You can also calculate if the response is correct or not by checking the field v
 
 ### Getting started
 
-**To use this field plug-in as-is**, just download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/master/timed-categories.fieldplugin.zip) file from this repo, and attach it to your form.
+**To use this field plug-in as-is**, just download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip) file from this repo, and attach it to your form.
 
 **To use with the sample form:**
 
-1. Download the [sample form](https://github.com/surveycto/timed-categories/raw/master/extras/sample-form/Sample%20form%20-%20Delete%20Twilio%20recording.xlsx) from this repo.
-1. Download the [crops_list.csv](https://github.com/surveycto/twilio-call/raw/master/extras/sample-form/twilio_access.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the file name, and save).
-1. Download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/master/timed-categories.fieldplugin.zip) file from this repo.
+1. Download the [sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-form/Sample%20form%20-%20Delete%20Twilio%20recording.xlsx) from this repo.
+1. Download the [crops_list.csv](https://github.com/surveycto/twilio-call/raw/main/extras/sample-form/twilio_access.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the file name, and save).
+1. Download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip) file from this repo.
 1. Upload the form to your server with the CSV and ZIP files attached.
 
 You can also check out [this sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx), which demonstrates the parameters, with [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip) and the field plug-in attached.
@@ -66,7 +66,7 @@ All choices in the choice list, except for the last choice, will be choices the 
 
 The **last choice** will not be displayed as a colummn, and instead it will be the **"pass" value**. It will be automatically selected if time runs out before a choice is selected. This "pass" choice is needed even if the field is not timed.
 
-The value of each choice will be the keyboard key pressed to select that choice. For example, if a choice has a *value* of `e`, then if the respondent presses the "E" key on their keyboard, then that choice will be selected, and the field will auto-advance.
+The value of each choice will be the keyboard key to press to select that choice. For example, if a choice has a *value* of `e`, then if the respondent presses the "E" key on their keyboard, then that choice will be selected, and the field will auto-advance.
 
 All choice values that are letters should be **lowercase** (they will be displayed in uppercase in the field, but the choice values themselves need to be lowercase). To set up a choice so it is selected when the spacebar is pressed, give that choice a *value* of `space` (this is demonstrated in field "instructions" the sample form).
 
@@ -80,9 +80,9 @@ These are by far the most common parameters you will use.
 
 |Name|Description|Default|
 |:---|:---|:---|
-|`duration`|<p>How long the respondent has to answer the field until it automatically moves on to the next page. No matter the value of `unit`, this should always be defined in **seconds**. If time runs out before a choice is selected, then the "pass" value will be automatically selected internally and saved as the choice value.</p><p>If this is undefined, then the field will be untimed, and the timer will not appear.</p>|None|
+|`duration`|<p>How long the respondent has to answer the field until it automatically moves on to the next page. No matter the value of `unit`, the `duration` should always be defined in **seconds**. If time runs out before a choice is selected, then the "pass" value will be automatically selected and saved as the choice value.</p><p>If this is undefined, then the field will be untimed, and the timer will not appear.</p>|None|
 |`unit`|<p>Unit to be used for the display time. For example, if `duration` has a value of 5, and `unit` has a value of `'cs'` for "centiseconds", then the time will start at 500, and count down to 0 over five seconds (500 centiseconds)</p><p>You can use `'s'` (seconds), `'ds'` (deciseconds), `'cs'` (centiseconds), or `'ms'` (milliseconds).</p>|`'s'`|
-|`correct`|<p>If a field has a "correct" value, you can define that in this parameter. If the respondent selects the correct answer, then the selected choice will turn green, and show a checkmark. If they select the wrong answer, the selected choice will turn red, and show an X. That way, the respondent gets instant feedback.</p><p>The value of this parameter should be the same as the correct choice value, but in quotes. For example, if the correct choice has a value of `e`, then this parameter should have a value of `'e'`. If the choice with a value of `e` is selected, then the selected choice will turn green; otherwise, it will turn red.</p><p>This parameter is optional, so even if a field has a "correct" value, id you don't want to give immediate feedback, you can simply leave this parameter out. If this parameter is not defined, then the selected choice will turn blue, whether or not it is right.</p>|None|
+|`correct`|<p>If a field has a "correct" value, you can define that in this parameter. If the respondent selects the correct answer, then the selected choice will turn green, and show a checkmark. If they select the wrong answer, the selected choice will turn red, and show an X. That way, the respondent gets instant feedback.</p><p>The value of this parameter should be the same as the correct choice value, but in quotes. For example, if the correct choice has a value of `e`, then this parameter should have a value of `'e'`. Then, if the choice with a value of `e` is selected, then the selected choice will turn green; if another choice is selected, it will turn red.</p><p>This parameter is optional, so even if a field has a "correct" value, id you don't want to give immediate feedback, you can simply leave this parameter out. If this parameter is not defined, then the selected choice will turn blue, whether or not it is right.</p>|None|
 
 #### Other parameters
 
@@ -93,8 +93,8 @@ These are other parameters you can use in your form, but they are a lot less com
 |`hidekeys`|Normally, the keyboard key used to select a choice will appear below the choice label. If this parameter has a value of `1`, then it will not show those keyboard keys. This can be helpful if the form will only be completed on a mobile device, where the correct choice will only be selected by clicking/tapping.|`0`|
 |`allowkeys`|Whether or not keyboard keys can be used to select a choice. If this parameter has a value of `0`, then keyboard keys cannot be used to select a choice, only clicking/tapping. It will also hide the keyboard keys usually shown below the choice labels, since they are not needed.|`1`|
 |`allowclick`|Whether or not clicking/tapping a choice on the choice column can be used to select a choice. If this parameter has a value of `0`, then clicking/tapping the choice cannot be used to select a choice, only keyboard keys.|`1`|
-|`continue`|<p>Whether or not the respondent can continue with the time they have left. For example, if the field has a `duration` of 10, and the respondent goes to the field, stays for two seconds, goes back to the previous field for five seconds, then returns to the timed-categories field, they will still have three seconds to answer the field.</p><p>If this parameter has a value of `0`, then if the respondent accidentally swipes backwards while on the field, then the field will automatically be assigned the "Pass" value.</p><p>This parameter has no effect if the `duration` is not set.</p>|`1`|
-|`allowchange`|<p>Related to `continue`, if the respondent answers a field, but they **still have time remaining**, then they can go back and change their answer. This can be helpful if the respondent is tapping the screen too much, accidentally answering a question before they actually get a chance to read it.</p><p>This parameter has no effect if the `duration` is not set.</p>|`1`|
+|`continue`|<p>Whether or not the respondent can continue with the time they have left. For example, if the field plug-in has a `duration` of 10, and the respondent goes to the field, stays for two seconds, goes back to the previous field for five seconds, then returns to the timed-categories field, they will still have three seconds to answer the field.</p><p>If this parameter has a value of `0`, then if the respondent accidentally swipes backwards while on the field, then the field will automatically be assigned the "Pass" value.</p><p>This parameter has no effect if the `duration` is not set.</p>|`1`|
+|`allowchange`|<p>Related to `continue`, by default, if the respondent answers a field, but they **still have time remaining**, then they can go back and change their answer. This can be helpful if the respondent is tapping the screen too much, accidentally answering a question before they actually get a chance to read it.</p><p>If this parameter has a value of `0`, then once a field is answered, its response cannot be changed, even if there is time remaining. This is recommended if the field has a `correct` value, so the respondent cannot correct an incorrect response.</p><p>This parameter has no effect if the `duration` is not set.</p>|`1`|
 |`frame_adjust` (advanced)|The field plug-in has been formatted so the tappable area takes up as much of the screen as possible, but without making it so big that the page becomes scrollable. If you would like to make the clickable area bigger or smaller, use this parameter to define how many pixels it should be adjusted by. For example, to make the clickable area 50 pixels taller, give this parameter a value of `50`. To make the clickable area 10 pixels shorter, give this parameter a value of `-10`.|`0`|
 
 For a demonstration of the parameters, deploy [this sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx), with [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip) and the field plug-in attached.
