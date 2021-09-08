@@ -96,7 +96,7 @@ If you are going to use basic characters that you can find on most keyboards, su
 
 ## Moving the timer
 
-|<img src="../readme-images/timer.png" width=25% />|<img src="timer-top.png" width=25% />|
+|<img src="../readme-images/timer.png" width="108px" />|<img src="timer-top.png" width="108px" />|
 |:---|:---|
 |Standard|Timer top
 
