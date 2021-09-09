@@ -58,7 +58,7 @@ You can also calculate if the response is correct or not by checking the field v
 **To use with the sample form:**
 
 1. Download the [sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/Timed%20categories%20sample%20form.xlsx) from this repo.
-1. Download the [crops_list.csv](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/crops_list.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the file name, and save).
+1. Download the [crops_list.csv](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/crops_list.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the end of the file name, and save).
 1. Download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip) file from this repo.
 1. Upload the form to your server with the CSV and ZIP files attached.
 
