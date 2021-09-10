@@ -16,7 +16,7 @@ If you look at the **style.css** stylesheet, there are lots of rulesets that cus
 
 |Ruleset|Description|
 |:---|:---|
-|**svg.timer-shell&nbsp;.timer-circle**|The circle around the timer that slowly shrinks. You can change the **stroke** to change the color of the circle. If you would like to change how thick the circle see [adjusting timer size](#adjusting-timer-size) below.|
+|**svg.timer-shell&nbsp;.timer-circle**|The circle around the timer that slowly shrinks. You can change the **stroke** to change the color of the circle. If you would like to change the thickness of the circle, see [adjusting timer size](#adjusting-timer-size) below.|
 |**.timer**|Number inside the timer circle. If you would like to change the size of the number, see [below](#timer-number).|
 |**td.tapped**|If the `correct` [parameter](../../README.md) is not defined, then this is the styling that will be applied to a choice when it is selected. Currently, it only changes the background color, but if you add a **color** property, that can be used to change the font color.|
 |**td.correct**|Style applied to a choice when it is selected, and its choice value is the value defined in the `correct` parameter.|
