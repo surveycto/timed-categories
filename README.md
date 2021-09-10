@@ -8,7 +8,7 @@
 
 | <img src="extras/readme-images/choice-selected.png" width="100px" /> | <img src="extras/readme-images/right-selected.png" width="100px" /> | <img src="extras/readme-images/wrong-selected.png" width="100px"/> |
 |:---:|:---:|:---:|
-| Choice selected | Right selected | Wrong selected |
+| Choice selected | Correct selected | Wrong selected |
 
 | <img src="extras/readme-images/web-mobile.png" width="100px"/> | <img src="extras/readme-images/web-desktop.png"  width="210px"/> |
 |:---:|:---:|
