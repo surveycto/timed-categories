@@ -8,7 +8,7 @@
 
 | <img src="extras/readme-images/choice-selected.png" width="100px" /> | <img src="extras/readme-images/right-selected.png" width="100px" /> | <img src="extras/readme-images/wrong-selected.png" width="100px"/> |
 |:---:|:---:|:---:|
-| Choice selected | Right selected | Wrong selected |
+| Choice selected | Correct selected | Wrong selected |
 
 | <img src="extras/readme-images/web-mobile.png" width="100px"/> | <img src="extras/readme-images/web-desktop.png"  width="210px"/> |
 |:---:|:---:|
@@ -19,6 +19,8 @@
 This field plug-in presents a number of choices as columns, and the respondent can select a choice using either a keyboard key, or tapping the area below the choice. They must select a choice within a certain period of time, or the field will be marked as "passed".
 
 Great for implicit association tests (IAT)!
+
+We will also be hosting a webinar about this field plug-in and IAT on **Wednesday, October 6, 2021, at 1 PM UTC / 9 AM EST**. You can learn more and register at [this blog post](https://www.surveycto.com/events/implicit-association-test-webinar/).
 
 [![](extras/readme-images/beta-release-download.jpeg)](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip)
 
