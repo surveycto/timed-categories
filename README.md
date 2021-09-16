@@ -110,10 +110,7 @@ For a demonstration of the parameters, deploy [this sample form](https://github.
 * If the form is going to be completed as a [web form](https://docs.surveycto.com/03-collecting-data/02-web-data-collection/01.web-forms.html), for the Collect settings, you may want to set *Disable swipe navigation* to *ON*. That way, if the respondent's finger slips while completing the form on mobile, they will not accidentally swipe backwards to the last field. To adjust web form settings, on the Collect tab of your server console, go to the form, and click *Settings*.
 * You can use the ["randomized" *appearance*](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03h.field-types-select-one.html) to randomize the order of the choice columns. However, the last choice in the choice list is always going to be the "pass" value, and not appear as a column. To make sure the last choice is always last, use the `randomized(0, 1)` *appearance*.
 * If you are going to use a `unit` other than seconds, it is a good idea to tell the respondent before they start the test, so they are prepared, and they can focus on the test.
-
-<!--
 * If you do not like the size of the timer circle, the colors, or something else, you can change the field plug-in files. Check out our guide on [customizations](extras/customizations/customizations.md).
--->
 
 ### Default SurveyCTO feature support
 
