@@ -2,7 +2,7 @@
 
 The timed-categories field plug-in has lots of parameters, so you can customize it to fit your needs. However, you can also change the field plug-in itself to customize its appearance. Here, we discuss some of the most common and easier changes you can make to this field plug-in.
 
-For help making customizations to the field plug-in, check out our support article on [customizing field plug-ins](https://support.surveycto.com/hc/en-us/articles/4406993623443). Even if you have never used CSS or HTML before, you can follow the steps described here to customize the field plug-in.
+For help making customizations to the field plug-in, check out our support article on [customizing field plug-ins](https://support.surveycto.com/hc/en-us/articles/4406993623443). Even if you have never used CSS or HTML before, you can follow the steps described there to customize the field plug-in.
 
 We have a lot of suggestions on this page, but feel free to just focus on the adjustments you would like to use, ignoring the others.
 
