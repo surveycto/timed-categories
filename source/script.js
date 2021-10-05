@@ -162,35 +162,38 @@ function keypress (e) {
  * @param {string} choiceValue Value of box clicked, or key pressed
  */
 function choiceSelected (choiceValue) { // When a box is clicked or a key is pressed
-  if (choiceValue === ' ') { // If the spacebar was pressed, then that corresponds to the "space" choice value
-    choiceValue = 'space'
-  }
-  var selectedCol = allowedKeys.indexOf(choiceValue)
-  if (selectedCol !== -1) {
-    var highlightElement = tdObj[choiceValue] // Find element to highlight
-    if (correctVal == null) { // There is no "correct" answer
-      highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
-    } else { // Will show if selection was correct
-      selectedCorrect = 1
-      var checkElement = document.createElement('div')
-      checkElement.classList.add('correct-symbol')
-      if (correctVal === choiceValue) {
-        highlightElement.classList.add('correct')
-        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
-      } else {
-        selectedCorrect = 0
-        highlightElement.classList.add('wrong')
-        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
-      }
-      highlightElement.appendChild(checkElement)
+  if (selectable) {
+    if (choiceValue === ' ') { // If the spacebar was pressed, then that corresponds to the "space" choice value
+      choiceValue = 'space'
     }
+    var selectedCol = allowedKeys.indexOf(choiceValue)
+    if (selectedCol !== -1) {
+      var highlightElement = tdObj[choiceValue] // Find element to highlight
+      if (correctVal == null) { // There is no "correct" answer
+        highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
+      } else { // Will show if selection was correct
+        selectedCorrect = 1
+        var checkElement = document.createElement('div')
+        checkElement.classList.add('correct-symbol')
+        if (correctVal === choiceValue) {
+          highlightElement.classList.add('correct')
+          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
+        } else {
+          selectedCorrect = 0
+          highlightElement.classList.add('wrong')
+          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
+        }
+        highlightElement.appendChild(checkElement)
+      }
 
-    setAnswer(choiceValue)
-    complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
-    setTimeout( // Use timeout to see what was selected before moving on
-      function () {
-        goToNextField()
-      }, 200) // End timeout
+      setAnswer(choiceValue)
+      selectable = false
+      complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
+      setTimeout(
+        function () {
+          goToNextField()
+        }, 200)
+    }
   }
 }
 
