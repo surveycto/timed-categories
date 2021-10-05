@@ -1,6 +1,7 @@
 /* global getMetaData, setMetaData, setAnswer, goToNextField, fieldProperties, getPluginParameter */
 
 var complete = false // {bool} If field is complete, then don't set up the even listeners, so a fast respondent can't change their answer
+var selectable = true // Whether choices can still be selected
 var allowedKeys = [] // Each goes into an array so it can be confirmed a legitimate keyboard key was pressed
 var choices = fieldProperties.CHOICES
 var numChoices = choices.length
@@ -78,15 +79,26 @@ for (let c = 0; c < numChoices - 1; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (durationStart == null) {
-  // Does nothing for now
-} else {
+if (complete && !allowchange) { // Already answered and cannot change
+  selectable = false
+  goToNextField()
+} else if ((metadata != null) && !allowContinue) { // They were here before, and not allowed to continue
+  if (!complete) { // Field was not answered last time
+    setAnswer(missedValue)
+    selectable = false // Not allowed to change
+    complete = true
+  }
+  goToNextField()
+} else if (durationStart == null) { // Field is not timed
+  if (metadata == null) {
+    setMetaData('1') // Set metadata so the field later knows it was already there, just in case.
+  }
+} else { // COMMON: The field is timed, and can work on field
   timerContainer.style.display = ''
   setUnit()
-  if (metadata == null) {
+  if (metadata == null) { // COMMON: Starting with a fresh page
     timeStart = durationStart * 1000 // Converts to ms
-  } else if (allowContinue && (!complete || allowchange)) {
-    complete = false // Set to not complete so event listeners will be set up again, but the current answer is still saved, can still complete the form even if an answer is not selected again.var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
+  } else {
     var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     var sepMetadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
     if (sepMetadata.length > 2) {
@@ -96,16 +108,10 @@ if (durationStart == null) {
     lastLeft = parseInt(sepMetadata[1])
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
-  } else { // The field was previously opened, but not allowed to continue, so setting timeLeft to -1 so it will automatically skip ahead
-    if (!complete) {
-      setAnswer(missedValue)
-      complete = true
-    }
-    timeLeft = -1
   }
 }
 
-if (!complete && (allowclick !== 0)) { // Set up click/tap on region
+if (selectable && (allowclick !== 0)) { // Set up click/tap on region
   for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
     var clickArea = clickAreas[tdNum]
     clickArea.addEventListener('click', function (e) {
@@ -116,7 +122,7 @@ if (!complete && (allowclick !== 0)) { // Set up click/tap on region
   }
 }
 
-if (!complete && (allowkeys !== 0)) { // Set up keyboard event listener if allowed
+if (selectable && (allowkeys !== 0)) { // Set up keyboard event listener if allowed
   document.addEventListener('keyup', keypress)
 }
 
@@ -130,7 +136,7 @@ if (durationStart != null) {
  * Runs as much as possible. Takes the current time stamp with the starting time stamp, and determines how much time is remaining. When time runs out, move on to the next field.
  */
 function timer () {
-  if (!complete) {
+  if (selectable) {
     var timeNow = Date.now()
     timeLeft = startTime + timeStart - timeNow
     setMetaData(String(timeLeft) + ' ' + String(timeNow) + (correctVal == null ? '' : ' ' + String(selectedCorrect))) // Save the time, so if the respondent leaves and comes back, can remove the time passed so far, as well as the time passed while they were gone. If there is a correct value, then add if the selected value is correct or not.
@@ -138,9 +144,9 @@ function timer () {
 
   if (timeLeft < 0) { // Stop the timer when time runs out. Using <0 instead of <=0 so does not keep setting the answer and going to the next field, and will only do it once.
     timeLeft = 0
-    if (!complete) {
+    if (selectable) {
       setAnswer(missedValue)
-      complete = true
+      selectable = false
     }
     goToNextField()
   }
@@ -161,35 +167,38 @@ function keypress (e) {
  * @param {string} choiceValue Value of box clicked, or key pressed
  */
 function choiceSelected (choiceValue) { // When a box is clicked or a key is pressed
-  if (choiceValue === ' ') { // If the spacebar was pressed, then that corresponds to the "space" choice value
-    choiceValue = 'space'
-  }
-  var selectedCol = allowedKeys.indexOf(choiceValue)
-  if (selectedCol !== -1) {
-    var highlightElement = tdObj[choiceValue] // Find element to highlight
-    if (correctVal == null) { // There is no "correct" answer
-      highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
-    } else { // Will show if selection was correct
-      selectedCorrect = 1
-      var checkElement = document.createElement('div')
-      checkElement.classList.add('correct-symbol')
-      if (correctVal === choiceValue) {
-        highlightElement.classList.add('correct')
-        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
-      } else {
-        selectedCorrect = 0
-        highlightElement.classList.add('wrong')
-        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
-      }
-      highlightElement.appendChild(checkElement)
+  if (selectable) {
+    if (choiceValue === ' ') { // If the spacebar was pressed, then that corresponds to the "space" choice value
+      choiceValue = 'space'
     }
+    var selectedCol = allowedKeys.indexOf(choiceValue)
+    if (selectedCol !== -1) {
+      var highlightElement = tdObj[choiceValue] // Find element to highlight
+      if (correctVal == null) { // There is no "correct" answer
+        highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
+      } else { // Will show if selection was correct
+        selectedCorrect = 1
+        var checkElement = document.createElement('div')
+        checkElement.classList.add('correct-symbol')
+        if (correctVal === choiceValue) {
+          highlightElement.classList.add('correct')
+          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
+        } else {
+          selectedCorrect = 0
+          highlightElement.classList.add('wrong')
+          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
+        }
+        highlightElement.appendChild(checkElement)
+      }
 
-    setAnswer(choiceValue)
-    complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
-    setTimeout( // Use timeout to see what was selected before moving on
-      function () {
-        goToNextField()
-      }, 200) // End timeout
+      setAnswer(choiceValue)
+      selectable = false
+      complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
+      setTimeout(
+        function () {
+          goToNextField()
+        }, 200)
+    }
   }
 }
 
