@@ -79,14 +79,26 @@ for (let c = 0; c < numChoices - 1; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (complete && !allowchange) {
+if (complete && !allowchange) { // Already answered and cannot change
   selectable = false
-} else if (durationStart != null) {
+  goToNextField()
+} else if ((metadata != null) && !allowContinue) { // They were here before, and not allowed to continue
+  if (!complete) { // Field was not answered last time
+    setAnswer(missedValue)
+    selectable = false // Not allowed to change
+    complete = true
+  }
+  goToNextField()
+} else if (durationStart == null) { // Field is not timed
+  if (metadata == null) {
+    setMetaData('1') // Set metadata so the field later knows it was already there, just in case.
+  }
+} else { // COMMON: The field is timed, and can work on field
   timerContainer.style.display = ''
   setUnit()
-  if (metadata == null) {
+  if (metadata == null) { // COMMON: Starting with a fresh page
     timeStart = durationStart * 1000 // Converts to ms
-  } else if (allowContinue && (!complete || allowchange)) {
+  } else {
     var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
     var sepMetadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
     if (sepMetadata.length > 2) {
@@ -96,13 +108,6 @@ if (complete && !allowchange) {
     lastLeft = parseInt(sepMetadata[1])
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
-  } else { // The field was previously opened, but not allowed to continue, so setting timeLeft to -1 so it will automatically skip ahead
-    if (!complete) {
-      setAnswer(missedValue)
-      selectable = false // Not allowed to change
-      complete = true
-    }
-    timeLeft = -1
   }
 }
 
