@@ -45,11 +45,21 @@ The field will have a value of the selected choice, or the value of the "pass" c
 
 #### Metadata
 
-Metadata is stored in space-separated list. The first two items in the list are used for internal purposes, but if you use the `correct` [parameter](#parameters) the third item will store a `1` if the correct choice was selected, and `0` otherwise. You can retrieve that value using an expression like this:
+Metadata is saved if the field is timed, i.e. if the `duration` [parameter](#parameters) has a value.
 
-    selected-at(plug-in-metadata(${fieldname}), 2)
+You can retrieve the metadata using the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata). Metadata is stored in a space-separated list, and you can retrieve each part using the [selected-at() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_selected-at). For example, if the field "metadata" is a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html) that uses the plug-in-metadata() function to retrieve the metadata, and you wanted the first item in the metadata list, you can use this expression:
 
-You can also calculate if the response is correct or not by checking the field value, which is demonstrated in the sample form.
+    selected-at(${metadata}, 0)
+
+There are two or three items in the metadata list:
+
+**0 Time remaining**: The time remaining in **milliseconds** when a choice was selected, or when the respondent left the field. You can use this to determine how long it took for the respondent to select a choice.
+
+**1 Timestamp**: The Unix time when the respondent when a choice was selected, or when the respondent left the field. This is mainly for internal use, and it is unlikely you will need it.
+
+**2 Correct**: Only used if the `correct` [parameter](#parameters) has a value. This has a value of `1` if the choice selected is correct, and `0` otherwise. Alternatively, you can also calculate if the response is correct or not by checking the field value, which is demonstrated in the sample form.
+
+Note: If the field is not timed, then the metadata will simply have a value of `1` if the field was opened (whether or not it was answered), and it will be blank otherwise.
 
 ## How to use
 
