@@ -45,6 +45,8 @@ The field will have a value of the selected choice, or the value of the "pass" c
 
 #### Metadata
 
+**Note**: As of this writing, field plug-in metadata can only be retrieved from a non-repeating field. If you would like to use the metadata, you will have to have multiple fields using the field plug-in instead of a repeating field.
+
 Metadata is saved if the field is timed, i.e. if the `duration` [parameter](#parameters) has a value.
 
 You can retrieve the metadata using the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata). Metadata is stored in a space-separated list, and you can retrieve each part using the [selected-at() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_selected-at). For example, if the field "metadata" is a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html) that uses the plug-in-metadata() function to retrieve the metadata, and you wanted the first item in the metadata list, you can use this expression:
