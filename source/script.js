@@ -108,6 +108,14 @@ if (complete && !allowchange) { // Already answered and cannot change
     lastLeft = parseInt(sepMetadata[1])
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
+    if (timeStart <= 0) { // If the time remaining is 0 or less, then skip ahead. This is to keep the original metadata.
+      selectable = false
+      if (!complete) { // Time has run out, so if there is no set answer, then set one.
+        setAnswer(missedValue)
+        complete = true // Probably not necessary here, but good in case update later.
+      }
+      goToNextField()
+    }
   }
 }
 
