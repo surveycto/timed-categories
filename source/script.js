@@ -144,10 +144,11 @@ function timer () {
 
   if (timeLeft < 0) { // Stop the timer when time runs out. Using <0 instead of <=0 so does not keep setting the answer and going to the next field, and will only do it once.
     timeLeft = 0
-    if (selectable) {
+    if (!complete) {
       setAnswer(missedValue)
-      selectable = false
+      complete = true
     }
+    selectable = false
     goToNextField()
   }
   timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) // Set time display
