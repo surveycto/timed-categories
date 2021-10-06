@@ -126,7 +126,7 @@ if (selectable && (allowkeys !== 0)) { // Set up keyboard event listener if allo
   document.addEventListener('keyup', keypress)
 }
 
-if (durationStart != null) {
+if ((durationStart != null) && selectable) {
   timerCircle.style.animation = String(durationStart) + 's' + ' circletimer linear forwards'
   timerCircle.style.animationDelay = '-' + String(Math.ceil(durationStart - (timeStart / 1000))) + 's' // Delay in case returning to field
   setInterval(timer, 1)
