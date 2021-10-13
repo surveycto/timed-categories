@@ -20,7 +20,7 @@ This field plug-in presents a number of choices as columns, and the respondent c
 
 Great for implicit association tests (IAT)!
 
-We will also be hosting a webinar about this field plug-in and IAT on **Wednesday, October 6, 2021, at 1 PM UTC / 9 AM EDT**. You can learn more and register at [this blog post](https://www.surveycto.com/events/implicit-association-test-webinar/).
+We also have a **webinar** on this field plug-in that demonstrates how to set it up and how to use it, which you can check out [here](https://www.surveycto.com/videos/iat-plugin-webinar/).
 
 [![](extras/readme-images/beta-release-download.jpeg)](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip)
 
