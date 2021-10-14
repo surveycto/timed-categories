@@ -72,7 +72,7 @@ Note: If the field is not timed, then the metadata will simply have a value of `
 **To use with the sample form:**
 
 1. Download the [sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/Timed%20categories%20sample%20form.xlsx) from this repo.
-1. Download the [crops_list.csv](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/crops_list.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the end of the file name, and save).
+1. Download the [crops_list.csv](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/attachments.zip) (downloads as ZIP file you can attach directly to your form).
 1. Download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip) file from this repo.
 1. Upload the form to your server with the CSV and ZIP files attached.
 
@@ -151,7 +151,7 @@ For a demonstration of the parameters, deploy [this sample form](https://github.
 ## More resources
 
 * **Sample form 1**  
-You can find the main form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/Timed%20categories%20sample%20form.xlsx). You will also need the [crops_list.csv file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/crops_list.csv).
+You can find the main form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/Timed%20categories%20sample%20form.xlsx). You will also need the [crops_list.csv file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/attachments.zip).
 
 * **Sample form 2**  
 You can find the other form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx). You will need to attach [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip).
