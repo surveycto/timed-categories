@@ -108,6 +108,14 @@ if (complete && !allowchange) { // Already answered and cannot change
     lastLeft = parseInt(sepMetadata[1])
     var timeSinceLast = Date.now() - lastLeft
     timeStart -= timeSinceLast // Remove time spent away from the field
+    if (timeStart <= 0) { // If the time remaining is 0 or less, then skip ahead. This is to keep the original metadata.
+      selectable = false
+      if (!complete) { // Time has run out, so if there is no set answer, then set one.
+        setAnswer(missedValue)
+        complete = true // Probably not necessary here, but good in case update later.
+      }
+      goToNextField()
+    }
   }
 }
 
@@ -126,7 +134,7 @@ if (selectable && (allowkeys !== 0)) { // Set up keyboard event listener if allo
   document.addEventListener('keyup', keypress)
 }
 
-if (durationStart != null) {
+if ((durationStart != null) && selectable) {
   timerCircle.style.animation = String(durationStart) + 's' + ' circletimer linear forwards'
   timerCircle.style.animationDelay = '-' + String(Math.ceil(durationStart - (timeStart / 1000))) + 's' // Delay in case returning to field
   setInterval(timer, 1)
@@ -144,10 +152,11 @@ function timer () {
 
   if (timeLeft < 0) { // Stop the timer when time runs out. Using <0 instead of <=0 so does not keep setting the answer and going to the next field, and will only do it once.
     timeLeft = 0
-    if (selectable) {
+    if (!complete) {
       setAnswer(missedValue)
-      selectable = false
+      complete = true
     }
+    selectable = false
     goToNextField()
   }
   timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) // Set time display

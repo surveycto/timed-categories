@@ -20,7 +20,7 @@ This field plug-in presents a number of choices as columns, and the respondent c
 
 Great for implicit association tests (IAT)!
 
-We will also be hosting a webinar about this field plug-in and IAT on **Wednesday, October 6, 2021, at 1 PM UTC / 9 AM EDT**. You can learn more and register at [this blog post](https://www.surveycto.com/events/implicit-association-test-webinar/).
+We also have a **webinar** on this field plug-in that demonstrates how to set it up and how to use it, which you can check out [here](https://www.surveycto.com/videos/iat-plugin-webinar/).
 
 [![](extras/readme-images/beta-release-download.jpeg)](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip)
 
@@ -45,11 +45,23 @@ The field will have a value of the selected choice, or the value of the "pass" c
 
 #### Metadata
 
-Metadata is stored in space-separated list. The first two items in the list are used for internal purposes, but if you use the `correct` [parameter](#parameters) the third item will store a `1` if the correct choice was selected, and `0` otherwise. You can retrieve that value using an expression like this:
+**Note**: As of this writing, field plug-in metadata can only be retrieved from a non-repeating field. If you would like to use the metadata, you will have to have multiple fields using the field plug-in instead of a repeating field.
 
-    selected-at(plug-in-metadata(${fieldname}), 2)
+Metadata is saved if the field is timed, i.e. if the `duration` [parameter](#parameters) has a value.
 
-You can also calculate if the response is correct or not by checking the field value, which is demonstrated in the sample form.
+You can retrieve the metadata using the [plug-in-metadata() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#plug-in-metadata). Metadata is stored in a space-separated list, and you can retrieve each part using the [selected-at() function](https://docs.surveycto.com/02-designing-forms/01-core-concepts/09.expressions.html#Help_Forms_selected-at). For example, if the field "metadata" is a [*calculate* field](https://docs.surveycto.com/02-designing-forms/01-core-concepts/03zb.field-types-calculate.html) that uses the plug-in-metadata() function to retrieve the metadata, and you wanted the first item in the metadata list, you can use this expression:
+
+    selected-at(${metadata}, 0)
+
+There are two or three items in the metadata list:
+
+**0 Time remaining**: The time remaining in **milliseconds** when a choice was selected, or when the respondent left the field. You can use this to determine how long it took for the respondent to select a choice.
+
+**1 Timestamp**: The Unix time when the respondent when a choice was selected, or when the respondent left the field. This is mainly for internal use, and it is unlikely you will need it.
+
+**2 Correct**: Only used if the `correct` [parameter](#parameters) has a value. This has a value of `1` if the choice selected is correct, and `0` otherwise. Alternatively, you can also calculate if the response is correct or not by checking the field value, which is demonstrated in the sample form.
+
+Note: If the field is not timed, then the metadata will simply have a value of `1` if the field was opened (whether or not it was answered), and it will be blank otherwise.
 
 ## How to use
 
@@ -60,7 +72,7 @@ You can also calculate if the response is correct or not by checking the field v
 **To use with the sample form:**
 
 1. Download the [sample form](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/Timed%20categories%20sample%20form.xlsx) from this repo.
-1. Download the [crops_list.csv](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/crops_list.csv) dataset template (right-click the link, click *Save link as*, set format to *All Files*, add `.csv` to the end of the file name, and save).
+1. Download the [crops_list.csv](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/attachments.zip) (downloads as ZIP file you can attach directly to your form).
 1. Download the [timed-categories.fieldplugin.zip](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip) file from this repo.
 1. Upload the form to your server with the CSV and ZIP files attached.
 
@@ -139,7 +151,7 @@ For a demonstration of the parameters, deploy [this sample form](https://github.
 ## More resources
 
 * **Sample form 1**  
-You can find the main form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/Timed%20categories%20sample%20form.xlsx). You will also need the [crops_list.csv file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/crops_list.csv).
+You can find the main form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/Timed%20categories%20sample%20form.xlsx). You will also need the [crops_list.csv file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/sample-main/attachments.zip).
 
 * **Sample form 2**  
 You can find the other form definition [here](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/Timed%20categories%20-%20more%20options.xlsx). You will need to attach [this file](https://github.com/surveycto/timed-categories/raw/main/extras/sample-forms/more-options/tc-other-attachments.zip).
