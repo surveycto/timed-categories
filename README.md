@@ -22,9 +22,7 @@ Great for implicit association tests (IAT)!
 
 We also have a **webinar** on this field plug-in that demonstrates how to set it up and how to use it, which you can check out [here](https://www.surveycto.com/videos/iat-plugin-webinar/).
 
-[![](extras/readme-images/beta-release-download.jpeg)](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip)
-
-*This plug-in is currently under beta. If you you find a problem with the field plug-in, please email support@surveycto.com.*
+[![Download](extras/readme-images/download-button.png)](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip)
 
 ### Features
 
