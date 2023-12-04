@@ -26,7 +26,7 @@ We also have a **webinar** on this field plug-in that demonstrates how to set it
 
 ### Features
 
-There are two versions of this field plug-in. They are contained in the same field plug-in file, and which one is determined by the field plug-in parameters.
+There are two versions of this field plug-in. They are contained in the same field plug-in file, and which one is determined by the field plug-in parameters. To use version 2, give the `version` parameter a value of `'2'`; to use version 1, simply don't include the `version` parameter.
 
 Click the link in the section to learn about that version.
 
@@ -44,7 +44,7 @@ Click the link in the section to learn about that version.
 * Display the keyboard key corresponding with each choice (optional).
 * If the respondent selects a choice they didn't mean to, and there was time remaining, they can go back and correct it (optional).
 
-[Click here to learn more about version 1...](/version_readmes/v1.md)
+[Click here to learn more about version 1...](version_readmes/v1.md)
 
 #### Version 2
 
@@ -53,4 +53,4 @@ Click the link in the section to learn about that version.
 * Prevent the respondent from moving forward until they select the correct choice.
 * Track if the correct choice was selected the first time, the time it took to select a choice initially, and the time it took to select the correct choice.
 
-[Click here to learn more about version 2...](/version_readmes/v1.md)
+[Click here to learn more about version 2...](version_readmes/v2.md)
