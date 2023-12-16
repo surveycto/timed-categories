@@ -8,7 +8,7 @@ var numChoices = choices.length
 var startTime = Date.now() // {number} Time code when the field starts
 var timeStart // {number} How much time the timer should start with. To be set by field plug-in parameter
 var timeLeft // {number} How much time is left on the timer
-var metadata = getMetaData()
+var metadataString = getMetaData()
 var timeUnit // {string} Time unit to be displayed
 var timeDivider // {number} Based on the timeUnit, what the ms time will be divided by for display to the user
 var selectedCorrect = 0 // This starts with a value of 0, but if the correct answer is selected, it is assigned a value of 1, and added to the metadata
@@ -108,7 +108,7 @@ if ((version == 2) && (correctVal == null)) {
 if (complete && !allowchange) { // Already answered and cannot change
   selectable = false
   goToNextField()
-} else if ((metadata != null) && !allowContinue) { // They were here before, and not allowed to continue
+} else if ((metadataString != null) && !allowContinue) { // They were here before, and not allowed to continue
   if (!complete) { // Field was not answered last time
     setAnswer(missedValue)
     selectable = false // Not allowed to change
@@ -117,22 +117,22 @@ if (complete && !allowchange) { // Already answered and cannot change
   goToNextField()
 } else if (version == 1) {
   if (durationStart == null) { // Field is not timed
-    if (metadata == null) {
+    if (metadataString == null) {
       setMetaData('1') // Set metadata so the field later knows it was already there, just in case.
     }
   } else { // COMMON: The field is timed, and can work on field
     timerContainer.style.display = ''
     setUnit()
-    if (metadata == null) { // COMMON: Starting with a fresh page
+    if (metadataString == null) { // COMMON: Starting with a fresh page
       timeStart = durationStart * 1000 // Converts to ms
     } else { // Respondent has been to the field before, and they are continuing
       var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
-      var sepMetadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
-      if (sepMetadata.length > 2) {
-        selectedCorrect = sepMetadata[2]
+      var metadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
+      if (metadata.length > 2) {
+        selectedCorrect = metadata[2]
       }
-      timeStart = parseInt(sepMetadata[0])
-      lastLeft = parseInt(sepMetadata[1])
+      timeStart = parseInt(metadata[0])
+      lastLeft = parseInt(metadata[1])
       var timeSinceLast = Date.now() - lastLeft
       timeStart -= timeSinceLast // Remove time spent away from the field
       if (timeStart <= 0) { // If the time remaining is 0 or less, then skip ahead. This is to keep the original metadata.
@@ -148,14 +148,14 @@ if (complete && !allowchange) { // Already answered and cannot change
   }
 } else { // Version 2
   setUnit()
-  var metadataString = getMetaData()
   if (metadataString == null) {
-    var startTime = Date.now()
+    startTime = Date.now()
     var complete = false
     var metadata = [startTime]
+    setV2Metadata()
   } else {
     var metadata = metadataString.split(' ')
-    var startTime = parseInt(metadata[0])
+    startTime = parseInt(metadata[0])
     if (metadata.length == 4) {
       complete = true
     } else {
