@@ -242,45 +242,43 @@ function choiceSelected (choiceValue) { // When a box is clicked or a key is pre
       choiceValue = 'space'
     }
     var selectedCol = allowedKeys.indexOf(choiceValue)
-    if (selectedCol !== -1) {
+    if (selectedCol !== -1) { // Choice selected actually exists
       var highlightElement = tdObj[choiceValue] // Find element to highlight
       if (correctVal == null) { // There is no "correct" answer
         highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
         completeField(choiceValue)
-      } else { // Will show if selection was correct
-        selectedCorrect = 1
-        var checkElement = document.createElement('div')
+      } else { // Will show if selection was correct or not
+        var checkElement = document.createElement('div') // This will be used to display a checkmark or an X.
         checkElement.classList.add('correct-symbol')
-        if (correctVal === choiceValue) {
+        if (correctVal === choiceValue) { // Selected choice was correct
+          selectedCorrect = 1
           highlightElement.classList.add('correct')
-          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
+          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713))) // Add checkmark
           highlightElement.appendChild(checkElement)
           if (version == 2) {
-            switch (metadata.length) { // Only one case for now, but may update later
-              case 1:
+            switch (metadata.length) {
+              case 1: // This is the first time a choice was selected.
                 metadata[1] = '1'
                 metadata[2] = String(Date.now() - startTime)
                 metadata[3] = String(Date.now() - startTime)
                 break
-              case 2: // Should never be the case, but adding just in case
+              case 2: // Should never be the case, but adding to be safe.
                 metadata[2] = '-1'
-              case 3:
+              case 3: // This is NOT the first time a choice was selected. 
                 metadata[3] = String(Date.now() - startTime)
                 break
             }
             setV2Metadata()
           }
           completeField(choiceValue)
-        } else {
+        } else { // Selected choice was incorrect
           selectedCorrect = 0
           highlightElement.classList.add('wrong')
           checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
           highlightElement.appendChild(checkElement)
           if (version == 1) {
-
             completeField(choiceValue)
           } else {
-
             switch (metadata.length) { // Only one case for now, but may update later
               case 1:
                 metadata[1] = '0'
@@ -300,7 +298,6 @@ function setV2Metadata() {
 }
 
 function completeField (choiceValue) {
-
   setAnswer(choiceValue)
   selectable = false
   complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
