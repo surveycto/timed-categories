@@ -39,8 +39,6 @@ if (typeof correctVal === 'string') { // Make lowercase to match more common cho
   correctVal = correctVal.toLocaleLowerCase()
 }
 
-
-
 var timerContainer = document.querySelector('.timer-container')
 var timeNumberContainer = timerContainer.querySelector('.timer')
 
@@ -62,7 +60,6 @@ if ((version == 1) && (numChoices > 1)) { // Used to remove the last choice, whi
   clickAreas[numChoices - 1].style.display = 'none' // Hide the "pass" element
 }
 
-
 if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the user prefers
   var keyRows = document.querySelectorAll('.key-row')
   var numKeyRows = keyRows.length
@@ -83,7 +80,6 @@ if ((allowchange === 0) || (version == 2)) {
   allowchange = true
 }
 
-
 for (let c = 0; c < numChoices; c++) {
   // Might as well un-entity while cycling through the choices
   var labelContainer = choiceLabelContainers[c]
@@ -103,7 +99,6 @@ var missedValue = choices[numChoices - 1].CHOICE_VALUE
 if ((version == 2) && (correctVal == null)) {
   correctVal = choices[0].CHOICE_VALUE
 }
-
 
 if (complete && !allowchange) { // Already answered and cannot change
   selectable = false
@@ -164,52 +159,8 @@ if (complete && !allowchange) { // Already answered and cannot change
   }
 }
 
-// if (version == 1) {
-//   if (complete && !allowchange) { // Already answered and cannot change
-//     selectable = false
-//     goToNextField()
-//   } else if ((metadata != null) && !allowContinue) { // They were here before, and not allowed to continue
-//     if (!complete) { // Field was not answered last time
-//       setAnswer(missedValue)
-//       selectable = false // Not allowed to change
-//       complete = true
-//     }
-//     goToNextField()
-//   } else if (durationStart == null) { // Field is not timed
-//     if (metadata == null) {
-//       setMetaData('1') // Set metadata so the field later knows it was already there, just in case.
-//     }
-//   } else { // COMMON: The field is timed, and can work on field
-//     timerContainer.style.display = ''
-//     setUnit()
-//     if (metadata == null) { // COMMON: Starting with a fresh page
-//       timeStart = durationStart * 1000 // Converts to ms
-//     } else {
-//       var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
-//       var sepMetadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
-//       if (sepMetadata.length > 2) {
-//         selectedCorrect = sepMetadata[2]
-//       }
-//       timeStart = parseInt(sepMetadata[0])
-//       lastLeft = parseInt(sepMetadata[1])
-//       var timeSinceLast = Date.now() - lastLeft
-//       timeStart -= timeSinceLast // Remove time spent away from the field
-//       if (timeStart <= 0) { // If the time remaining is 0 or less, then skip ahead. This is to keep the original metadata.
-//         selectable = false
-//         if (!complete) { // Time has run out, so if there is no set answer, then set one.
-//           setAnswer(missedValue)
-//           complete = true // Probably not necessary here, but good in case update later.
-//         }
-//         goToNextField()
-//       }
-//     }
-//   }
-// } else { // Version 2
-// }
-
 if (!complete) {
   if (selectable && (allowclick !== 0)) { // Set up click/tap on region
-    console.log('Adding click areas')
     for (var tdNum = 0; tdNum < numChoices; tdNum++) {
       var clickArea = clickAreas[tdNum]
       clickArea.addEventListener('click', function (e) {
@@ -217,8 +168,6 @@ if (!complete) {
         var choiceId = eventTarget.id.substr(7)
         choiceSelected(choiceId)
       })
-      console.log('Click area for ')
-      console.log(clickArea)
     }
   }
 
@@ -341,9 +290,7 @@ function choiceSelected (choiceValue) { // When a box is clicked or a key is pre
             setV2Metadata()
           }
         }
-
       }
-
     }
   }
 }
