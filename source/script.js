@@ -77,7 +77,7 @@ if (allowContinue === 0) {
   allowContinue = true
 }
 
-if (allowchange === 0) {
+if ((allowchange === 0) || (version == 2)) {
   allowchange = false
 } else {
   allowchange = true
