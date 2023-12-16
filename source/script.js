@@ -99,24 +99,9 @@ for (let c = 0; c < numChoices; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-
-if (allowedKeys.length == 0) {
-  // If there is a blank choice list (which should never be the case)
-} else {
-  if (version == 1) {
-    var missedValue = choices[numChoices - 1].CHOICE_VALUE // {string} Value to be saved when time runs out before a choice can be selected
-  } else {
-    if (allowedKeys.length == 1) {
-      var missedValue = allowedKeys[0]
-    } else { // Most common
-      if (allowedKeys[0] == missedValue) {
-        var missedValue = allowedKeys[1]
-      } else {
-        var missedValue = allowedKeys[0]
-      }
-    }
-  }
-
+var missedValue = choices[numChoices - 1].CHOICE_VALUE
+if ((version == 2) && (correctVal == null)) {
+  correctVal = choices[0].CHOICE_VALUE
 }
 
 
