@@ -16,19 +16,21 @@
 
 ## Description
 
-This field plug-in presents a number of choices as columns, and the respondent can select a choice using either a keyboard key, or tapping the area below the choice. They must select a choice within a certain period of time, or the field will be marked as "passed".
+This field plug-in presents a number of choices as columns, and the respondent can select a choice using either a keyboard key, or tapping the area below the choice. This field plug-in is timed.
 
 Great for implicit association tests (IAT)!
 
-We also have a **webinar** on this field plug-in that demonstrates how to set it up and how to use it, which you can check out [here](https://www.surveycto.com/videos/iat-plugin-webinar/).
+There are two versions of this field plug-in. In version 1, the respondent must select a choice within a certain period of time, or the field will be marked as "passed". In version 2, there will always be a "correct" answer, and the respondent cannot move forward until they select the correct answer. See [Features](#features) below for details.
+
+We also have a **webinar** on this field plug-in that demonstrates how to set up and use version 1, which you can check out [here](https://www.surveycto.com/videos/iat-plugin-webinar/).
 
 [![Download](extras/readme-images/download-button.png)](https://github.com/surveycto/timed-categories/raw/main/timed-categories.fieldplugin.zip)
 
 ### Features
 
-There are two versions of this field plug-in. They are contained in the same field plug-in file, and which one is determined by the field plug-in parameters. To use version 2, give the `version` parameter a value of `'2'`; to use version 1, simply don't include the `version` parameter.
+There are two versions of this field plug-in. They are contained in the same field plug-in file, and which version is determined by the field plug-in parameters. To use version 2, give the `version` parameter a value of `'2'`; to use version 1, simply don't include the `version` parameter.
 
-Click the link in the section to learn about that version.
+Click the link in the section below to learn about that version.
 
 #### Both
 
@@ -51,6 +53,8 @@ Click the link in the section to learn about that version.
 * Track time spent on the field with customizable units (seconds, deciseconds, centiseconds, and milliseconds) (optional).
 * Inform the respondent if they selected the wrong choice, and give them a chance to select the correct choice.
 * Prevent the respondent from moving forward until they select the correct choice.
-* Track if the correct choice was selected the first time, the time it took to select a choice initially, and the time it took to select the correct choice.
+* Track if the correct choice was selected the first time.
+* Track the time it took to select a choice initially (no matter if it was correct or not).
+* Track the time it took to select the correct choice.
 
 [Click here to learn more about version 2...](version_readmes/v2.md)
