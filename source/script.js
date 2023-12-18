@@ -160,7 +160,7 @@ if (complete && !allowChange) { // Already answered and cannot change
 }
 
 if (selectable) {
-  if (selectable && (allowclick !== 0)) { // Set up click/tap on region
+  if (allowclick !== 0) { // Set up click/tap on region
     for (var tdNum = 0; tdNum < numChoices; tdNum++) {
       var clickArea = clickAreas[tdNum]
       clickArea.addEventListener('click', function (e) {
@@ -171,7 +171,7 @@ if (selectable) {
     }
   }
 
-  if (selectable && (allowkeys !== 0)) { // Set up keyboard event listener if allowed
+  if (allowkeys !== 0) { // Set up keyboard event listener if allowed
     document.addEventListener('keyup', keypress)
   }
 }
