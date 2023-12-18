@@ -130,6 +130,14 @@ if (complete && !allowChange) { // Already answered and cannot change
       lastLeft = parseInt(metadata[1])
       var timeSinceLast = Date.now() - lastLeft
       timeStart -= timeSinceLast // Remove time spent away from the field
+
+      for (var i = 0; i < numChoices; i++) { // If choice is selected, then highlight it. That way, if the respondent would like to change their choice, they can see what they already selected.
+        var choice = choices[i]
+        if (choice.CHOICE_SELECTED) {
+          tdObj[choice.CHOICE_VALUE].classList.add('tapped')
+        }
+      }
+
       if (timeStart <= 0) { // If the time remaining is 0 or less, then skip ahead. This is to keep the original metadata.
         selectable = false
         if (!complete) { // Time has run out, so if there is no set answer, then set one.
