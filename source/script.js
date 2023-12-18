@@ -29,7 +29,7 @@ if (version != 2) {
   missedValue = choices[numChoices - 1].CHOICE_VALUE
 }
 
-if ((showTimer == 0) || (durationStart == null)) {
+if ((showTimer == 0) || ((durationStart == null) && (version == 1))) {
   showTimer = false
 } else {
   showTimer = true
@@ -201,9 +201,15 @@ if (showTimer) {
       timeNumberContainer.innerHTML = timeRemaining
       setInterval(timer1, 1)
     } else {
-      timeNumberContainer.innerHTML = String(Math.floor(metadata[3] / timeDivider, 0)) // Set time display
+      var timePassed
+      if (metadata == null) {
+        timePassed = 0
+      } else {
+        timePassed = Date.now() - metadata[0]
+      }
+      timeNumberContainer.innerHTML = String(Math.floor(timePassed / timeDivider, 0)) // Set time display
 
-      // setInterval(timer2, 1)
+      setInterval(timer2, 1)
     }
   }
 }
