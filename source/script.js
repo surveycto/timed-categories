@@ -17,19 +17,19 @@ var version = getPluginParameter('version')
 var showTimer = getPluginParameter('showtimer')
 var durationStart = getPluginParameter('duration')
 var allowContinue = getPluginParameter('continue')
-var allowchange = getPluginParameter('allowchange')
+var allowChange = getPluginParameter('allowchange')
 var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
 var correctVal = getPluginParameter('correct')
 
-if (version == null) {
+var missedValue // There is only a "missed" value in version 1
+if (version != 2) {
   version = 1
-} else if (version != 2) {
-  version = 1
+  missedValue = choices[numChoices - 1].CHOICE_VALUE
 }
 
-if (showTimer == 0) {
+if ((showTimer == 0) || (durationStart == null)) {
   showTimer = false
 } else {
   showTimer = true
@@ -57,7 +57,7 @@ for (var e = 0; e < numChoices; e++) {
 
 if ((version == 1) && (numChoices > 1)) { // Used to remove the last choice, which is used for the "pass" value when time runs out.
   numChoices -= 1
-  clickAreas[numChoices - 1].style.display = 'none' // Hide the "pass" element
+  clickAreas[numChoices].style.display = 'none' // Hide the "pass" element
 }
 
 if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the user prefers
@@ -68,16 +68,16 @@ if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the us
   }
 }
 
-if (allowContinue === 0) {
+if ((allowContinue === 0) && (version == 1)) {
   allowContinue = false
 } else {
   allowContinue = true
 }
 
-if ((allowchange === 0) || (version == 2)) {
-  allowchange = false
+if ((allowChange === 0) || (version == 2)) {
+  allowChange = false
 } else {
-  allowchange = true
+  allowChange = true
 }
 
 for (let c = 0; c < numChoices; c++) {
@@ -95,12 +95,11 @@ for (let c = 0; c < numChoices; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-var missedValue = choices[numChoices - 1].CHOICE_VALUE
 if ((version == 2) && (correctVal == null)) {
   correctVal = choices[0].CHOICE_VALUE
 }
 
-if (complete && !allowchange) { // Already answered and cannot change
+if (complete && !allowChange) { // Already answered and cannot change
   selectable = false
   goToNextField()
 } else if ((metadataString != null) && !allowContinue) { // They were here before, and not allowed to continue
@@ -109,11 +108,12 @@ if (complete && !allowchange) { // Already answered and cannot change
     selectable = false // Not allowed to change
     complete = true
   }
+
   goToNextField()
 } else if (version == 1) {
   if (durationStart == null) { // Field is not timed
     if (metadataString == null) {
-      setMetaData('1') // Set metadata so the field later knows it was already there, just in case.
+      setMetaData('1') // Set metadata so the field later knows the respondent was already here, just in case.
     }
   } else { // COMMON: The field is timed, and can work on field
     timerContainer.style.display = ''
@@ -122,7 +122,7 @@ if (complete && !allowchange) { // Already answered and cannot change
       timeStart = durationStart * 1000 // Converts to ms
     } else { // Respondent has been to the field before, and they are continuing
       var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
-      var metadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
+      var metadata = metadataString.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
       if (metadata.length > 2) {
         selectedCorrect = metadata[2]
       }
@@ -159,7 +159,7 @@ if (complete && !allowchange) { // Already answered and cannot change
   }
 }
 
-if (!complete) {
+if (selectable) {
   if (selectable && (allowclick !== 0)) { // Set up click/tap on region
     for (var tdNum = 0; tdNum < numChoices; tdNum++) {
       var clickArea = clickAreas[tdNum]
@@ -178,18 +178,24 @@ if (!complete) {
 
 if (showTimer) {
   timerContainer.style.display = ''
-  if (!complete) {
+  if (!complete || allowChange) {
     if (version == 1) {
       if ((durationStart != null) && selectable) {
         timerCircle.style.animation = String(durationStart) + 's' + ' circletimer linear forwards'
         timerCircle.style.animationDelay = '-' + String(Math.ceil(durationStart - (timeStart / 1000))) + 's' // Delay in case returning to field
       }
-      timeNumberContainer.innerHTML = String(Math.ceil(metadata[3] / timeDivider, 0)) // Set time display
+      var timeRemaining
+      if (metadata == null) {
+        timeRemaining = String(durationStart)
+      } else {
+        timeRemaining = String(Math.ceil(metadata[0] / timeDivider, 0)) // Set time display
+      }
+      timeNumberContainer.innerHTML = timeRemaining
       setInterval(timer1, 1)
     } else {
       timeNumberContainer.innerHTML = String(Math.floor(metadata[3] / timeDivider, 0)) // Set time display
 
-      setInterval(timer2, 1)
+      // setInterval(timer2, 1)
     }
   }
 }
