@@ -78,7 +78,7 @@ td.main-cell > table {
 
 /* Style when a choice is selected, and there is no "correct" answer */
 td.tapped {
-  background-color: #CDE5F3;
+  background-color: #cde5f3;
 }
 
 /* Style when a choice is selected, and it is correct */
