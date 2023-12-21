@@ -5,26 +5,25 @@ var selectable = true // Whether choices can still be selected
 var allowedKeys = [] // Each goes into an array so it can be confirmed a legitimate keyboard key was pressed
 var choices = fieldProperties.CHOICES
 var numChoices = choices.length
-var missedValue = choices[numChoices - 1].CHOICE_VALUE // {string} Value to be saved when time runs out before a choice can be selected
 var startTime = Date.now() // {number} Time code when the field starts
 var timeStart // {number} How much time the timer should start with. To be set by field plug-in parameter
 var timeLeft // {number} How much time is left on the timer
-var metadata = getMetaData()
+
+var metadataString = getMetaData()
+/* In space separated list:
+    * Timestamp of when field was first entered.
+    * 1 if answered correctly the first time, 0 if incorrect the first time.
+    * Time in milliseconds it took to select an answer the first time.
+    * Time in milliseconds it took to select the correct answer. If the correct answer was selected first, then this will be the same as the third number.
+*/
 var timeUnit // {string} Time unit to be displayed
 var timeDivider // {number} Based on the timeUnit, what the ms time will be divided by for display to the user
-var selectedCorrect = 0 // This starts with a value of 0, but if the correct answer is selected, it is assigned a value of 1, and added to the metadata
 
-var durationStart = getPluginParameter('duration')
-var allowContinue = getPluginParameter('continue')
-var allowchange = getPluginParameter('allowchange')
+var showTimer = getPluginParameter('showtimer')
 var allowkeys = getPluginParameter('allowkeys')
 var allowclick = getPluginParameter('allowclick')
 var hidekeys = getPluginParameter('hidekeys')
 var correctVal = getPluginParameter('correct')
-
-if (typeof correctVal === 'string') { // Make lowercase to match more common choice values
-  correctVal = correctVal.toLocaleLowerCase()
-}
 
 var timerContainer = document.querySelector('.timer-container')
 var timeNumberContainer = timerContainer.querySelector('.timer')
@@ -35,6 +34,12 @@ var keyContainers = document.querySelectorAll('#key') // {Array<Element>} Where 
 var clickAreas = document.querySelectorAll('.main-cell') // {Array<Element>} Clickable areas
 var choiceLabelContainers = document.querySelectorAll('.choice-label') // {Array<Element>} Used later to unEntity
 
+if (showTimer == 0) {
+  showTimer = false
+} else {
+  showTimer = true
+}
+
 var tdObj = {} // Key is the choice value, and value is the corresponding TD element. Used to highlight the element later
 for (var e = 0; e < numChoices; e++) {
   var thisElement = clickAreas[e]
@@ -42,7 +47,11 @@ for (var e = 0; e < numChoices; e++) {
   tdObj[elementId] = thisElement
 }
 
-clickAreas[numChoices - 1].style.display = 'none' // Hide the "pass" element
+if (typeof correctVal === 'string') { // Make lowercase to match more common choice values
+  correctVal = correctVal.toLocaleLowerCase()
+} else if (correctVal == null) {
+  correctVal = fieldProperties.CHOICES[0].CHOICE_VALUE
+}
 
 if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the user prefers
   var keyRows = document.querySelectorAll('.key-row')
@@ -52,19 +61,8 @@ if ((hidekeys === 1) || (allowkeys === 0)) { // Hide the keys to press if the us
   }
 }
 
-if (allowContinue === 0) {
-  allowContinue = false
-} else {
-  allowContinue = true
-}
 
-if (allowchange === 0) {
-  allowchange = false
-} else {
-  allowchange = true
-}
-
-for (let c = 0; c < numChoices - 1; c++) {
+for (let c = 0; c < numChoices; c++) {
   // Might as well un-entity while here
   var labelContainer = choiceLabelContainers[c]
   labelContainer.innerHTML = unEntity(labelContainer.innerHTML)
@@ -79,87 +77,55 @@ for (let c = 0; c < numChoices - 1; c++) {
   keyContainers[c].innerHTML = key.toUpperCase()
 }
 
-if (complete && !allowchange) { // Already answered and cannot change
-  selectable = false
-  goToNextField()
-} else if ((metadata != null) && !allowContinue) { // They were here before, and not allowed to continue
-  if (!complete) { // Field was not answered last time
-    setAnswer(missedValue)
-    selectable = false // Not allowed to change
+if (metadataString == null) {
+  var startTime = Date.now()
+  var complete = false
+  var metadata = [startTime]
+} else {
+  var metadata = metadataString.split(' ')
+  var startTime = parseInt(metadataString[0])
+  if (metadata.length == 4) {
     complete = true
+  } else {
+    complete = false
   }
-  goToNextField()
-} else if (durationStart == null) { // Field is not timed
-  if (metadata == null) {
-    setMetaData('1') // Set metadata so the field later knows it was already there, just in case.
+}
+
+if (!complete) {
+  if (selectable && (allowclick !== 0)) { // Set up click/tap on region
+    for (var tdNum = 0; tdNum < numChoices; tdNum++) {
+      var clickArea = clickAreas[tdNum]
+      clickArea.addEventListener('click', function (e) {
+        var eventTarget = e.currentTarget
+        var choiceId = eventTarget.id.substr(7)
+        choiceSelected(choiceId)
+      })
+    }
   }
-} else { // COMMON: The field is timed, and can work on field
+  
+  if (selectable && (allowkeys !== 0)) { // Set up keyboard event listener if allowed
+    document.addEventListener('keyup', keypress)
+  }
+  
+
+}
+if (showTimer) {
   timerContainer.style.display = ''
   setUnit()
-  if (metadata == null) { // COMMON: Starting with a fresh page
-    timeStart = durationStart * 1000 // Converts to ms
-  } else {
-    var lastLeft // {number} Time remaining from last time. Will remove the time passed since last at the field
-    var sepMetadata = metadata.match(/[^ ]+/g) // List is space-separated, so use regex to get it here
-    if (sepMetadata.length > 2) {
-      selectedCorrect = sepMetadata[2]
-    }
-    timeStart = parseInt(sepMetadata[0])
-    lastLeft = parseInt(sepMetadata[1])
-    var timeSinceLast = Date.now() - lastLeft
-    timeStart -= timeSinceLast // Remove time spent away from the field
-    if (timeStart <= 0) { // If the time remaining is 0 or less, then skip ahead. This is to keep the original metadata.
-      selectable = false
-      if (!complete) { // Time has run out, so if there is no set answer, then set one.
-        setAnswer(missedValue)
-        complete = true // Probably not necessary here, but good in case update later.
-      }
-      goToNextField()
-    }
-  }
-}
-
-if (selectable && (allowclick !== 0)) { // Set up click/tap on region
-  for (var tdNum = 0; tdNum < numChoices - 1; tdNum++) {
-    var clickArea = clickAreas[tdNum]
-    clickArea.addEventListener('click', function (e) {
-      var eventTarget = e.currentTarget
-      var choiceId = eventTarget.id.substr(7)
-      choiceSelected(choiceId)
-    })
-  }
-}
-
-if (selectable && (allowkeys !== 0)) { // Set up keyboard event listener if allowed
-  document.addEventListener('keyup', keypress)
-}
-
-if ((durationStart != null) && selectable) {
-  timerCircle.style.animation = String(durationStart) + 's' + ' circletimer linear forwards'
-  timerCircle.style.animationDelay = '-' + String(Math.ceil(durationStart - (timeStart / 1000))) + 's' // Delay in case returning to field
   setInterval(timer, 1)
+  if (complete) {
+    timeNumberContainer.innerHTML = String(Math.floor(metadata[3] / timeDivider, 0)) // Set time display
+  }
 }
 
 /**
  * Runs as much as possible. Takes the current time stamp with the starting time stamp, and determines how much time is remaining. When time runs out, move on to the next field.
  */
 function timer () {
-  if (selectable) {
-    var timeNow = Date.now()
-    timeLeft = startTime + timeStart - timeNow
-    setMetaData(String(timeLeft) + ' ' + String(timeNow) + (correctVal == null ? '' : ' ' + String(selectedCorrect))) // Save the time, so if the respondent leaves and comes back, can remove the time passed so far, as well as the time passed while they were gone. If there is a correct value, then add if the selected value is correct or not.
+  if (!complete) {
+    var time = Date.now() - startTime
+    timeNumberContainer.innerHTML = String(Math.floor(time / timeDivider, 0)) // Set time display
   }
-
-  if (timeLeft < 0) { // Stop the timer when time runs out. Using <0 instead of <=0 so does not keep setting the answer and going to the next field, and will only do it once.
-    timeLeft = 0
-    if (!complete) {
-      setAnswer(missedValue)
-      complete = true
-    }
-    selectable = false
-    goToNextField()
-  }
-  timeNumberContainer.innerHTML = String(Math.ceil(timeLeft / timeDivider, 0)) // Set time display
 }
 
 /**
@@ -183,30 +149,44 @@ function choiceSelected (choiceValue) { // When a box is clicked or a key is pre
     var selectedCol = allowedKeys.indexOf(choiceValue)
     if (selectedCol !== -1) {
       var highlightElement = tdObj[choiceValue] // Find element to highlight
-      if (correctVal == null) { // There is no "correct" answer
-        highlightElement.classList.add('tapped') // Highlight the corresponding cell to show what was selected
-      } else { // Will show if selection was correct
-        selectedCorrect = 1
-        var checkElement = document.createElement('div')
-        checkElement.classList.add('correct-symbol')
-        if (correctVal === choiceValue) {
-          highlightElement.classList.add('correct')
-          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
-        } else {
-          selectedCorrect = 0
-          highlightElement.classList.add('wrong')
-          checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
+      var checkElement = document.createElement('div')
+      checkElement.classList.add('correct-symbol')
+      if (correctVal === choiceValue) {
+        switch (metadata.length) { // Only one case for now, but may update later
+          case 1:
+            metadata[1] = '1'
+            metadata[2] = String(Date.now() - startTime)
+            metadata[3] = String(Date.now() - startTime)
+            break
+          case 2: // Should never be the case, but adding just in case
+            metadata[2] = '-1'
+          case 3:
+            metadata[3] = String(Date.now() - startTime)
+            break
         }
-        highlightElement.appendChild(checkElement)
-      }
+        highlightElement.classList.add('correct')
+        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2713)))
+        setAnswer(choiceValue)
+        complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
 
-      setAnswer(choiceValue)
-      selectable = false
-      complete = true // Probably not needed by this point, since "complete" is not used once a choice is selected, but will keep for now.
-      setTimeout(
-        function () {
-          goToNextField()
-        }, 200)
+        setTimeout(
+          function () {
+            goToNextField()
+          }, 200)
+      } else {
+        switch (metadata.length) { // Only one case for now, but may update later
+          case 1:
+            metadata[1] = '0'
+            metadata[2] = String(Date.now() - startTime)
+            break
+        }
+        highlightElement.classList.add('wrong')
+        checkElement.appendChild(document.createTextNode(String.fromCharCode(0x2717)))
+      }
+      metadataString = metadata.join(' ')
+      console.log(metadataString)
+      setMetaData(metadataString)
+      highlightElement.appendChild(checkElement)
     }
   }
 }
